@@ -9,50 +9,56 @@ if (currentTheme === 'dark') {
 }
 
 // Toggle theme on button click
-themeToggle.addEventListener('click', () => {
-    body.classList.toggle('dark-mode');
-    
-    // Save preference to localStorage
-    const theme = body.classList.contains('dark-mode') ? 'dark' : 'light';
-    localStorage.setItem('theme', theme);
-    
-    // Add animation effect
-    themeToggle.style.transform = 'rotate(360deg)';
-    setTimeout(() => {
-        themeToggle.style.transform = '';
-    }, 300);
-});
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        // Save preference to localStorage
+        const theme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+        
+        // Add animation effect
+        themeToggle.style.transform = 'rotate(360deg)';
+        setTimeout(() => {
+            themeToggle.style.transform = '';
+        }, 300);
+    });
+}
 
 // Mobile Menu Toggle
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const navMenu = document.getElementById('navMenu');
 
-mobileMenuBtn.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    
-    // Animate hamburger menu
-    const spans = mobileMenuBtn.querySelectorAll('span');
-    if (navMenu.classList.contains('active')) {
-        spans[0].style.transform = 'rotate(45deg) translateY(10px)';
-        spans[1].style.opacity = '0';
-        spans[2].style.transform = 'rotate(-45deg) translateY(-10px)';
-    } else {
-        spans[0].style.transform = '';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = '';
-    }
-});
+if (mobileMenuBtn && navMenu) {
+    mobileMenuBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        
+        // Animate hamburger menu
+        const spans = mobileMenuBtn.querySelectorAll('span');
+        if (navMenu.classList.contains('active')) {
+            spans[0].style.transform = 'rotate(45deg) translateY(10px)';
+            spans[1].style.opacity = '0';
+            spans[2].style.transform = 'rotate(-45deg) translateY(-10px)';
+        } else {
+            spans[0].style.transform = '';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = '';
+        }
+    });
+}
 
 // Close mobile menu when clicking on a link
 const navLinks = document.querySelectorAll('.nav-link');
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 768 && navMenu) {
             navMenu.classList.remove('active');
-            const spans = mobileMenuBtn.querySelectorAll('span');
-            spans[0].style.transform = '';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = '';
+            const spans = mobileMenuBtn?.querySelectorAll('span');
+            if (spans) {
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = '';
+            }
         }
     });
 });
@@ -129,7 +135,7 @@ buttons.forEach(button => {
     });
 });
 
-// Animate stats counter on scroll
+// Animate stats counter on scroll (only if stats section exists)
 const statNumbers = document.querySelectorAll('.stat-number');
 let hasAnimated = false;
 
@@ -137,6 +143,8 @@ const animateStats = () => {
     if (hasAnimated) return;
     
     const statsSection = document.querySelector('.stats');
+    if (!statsSection) return; // Exit if stats section doesn't exist on this page
+    
     const rect = statsSection.getBoundingClientRect();
     const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
     
@@ -166,18 +174,21 @@ const animateStats = () => {
     }
 };
 
-window.addEventListener('scroll', animateStats);
-window.addEventListener('load', animateStats);
+// Only add scroll listener if stats section exists
+if (document.querySelector('.stats')) {
+    window.addEventListener('scroll', animateStats);
+    window.addEventListener('load', animateStats);
+}
 
-// Add parallax effect to hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero) {
+// Add parallax effect to hero section (only if hero exists)
+const hero = document.querySelector('.hero');
+if (hero) {
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
         hero.style.transform = `translateY(${scrolled * 0.5}px)`;
         hero.style.opacity = 1 - (scrolled / 500);
-    }
-});
+    });
+}
 
 // Console message for developers
 console.log('%cBrainMapRevision', 'color: #FF8C42; font-size: 24px; font-weight: bold;');
@@ -190,12 +201,14 @@ window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
         // Close mobile menu on resize to desktop
-        if (window.innerWidth > 768) {
+        if (window.innerWidth > 768 && navMenu) {
             navMenu.classList.remove('active');
-            const spans = mobileMenuBtn.querySelectorAll('span');
-            spans[0].style.transform = '';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = '';
+            const spans = mobileMenuBtn?.querySelectorAll('span');
+            if (spans) {
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = '';
+            }
         }
     }, 250);
 });

@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrainMapRevision - Sign Up</title>
+    <title>Sign Up - BrainMapRevision</title>
     <link rel="stylesheet" href="../style.css">
-<link rel="shortcut icon" href="../assets/images/shortcut-icon.png">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+    <link rel="shortcut icon" href="../assets/images/shortcut-icon.png">
 </head>
 <body>
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -25,10 +27,8 @@
             </button>
 
             <div class="nav-menu" id="navMenu">
-                <a href="login.html" class="nav-link">Features</a>
-                <a href="#subjects" class="nav-link">Subjects</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#contribute" class="nav-link">Contribute</a>
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="login.html" class="nav-link">Login</a>
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
                     <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="5"/>
@@ -49,6 +49,221 @@
         </div>
     </nav>
 
+    <!-- Sign Up Form -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Create Your Account</h1>
+                <p class="auth-subtitle">Start your revision journey today</p>
+            </div>
+
+            <form id="signupForm" class="auth-form">
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label class="form-label">I am a:</label>
+                    <div class="role-selection">
+                        <label class="role-option">
+                            <input type="radio" name="role" value="student" checked>
+                            <div class="role-card">
+                                <svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <span class="role-title">Student</span>
+                            </div>
+                        </label>
+                        <label class="role-option">
+                            <input type="radio" name="role" value="teacher">
+                            <div class="role-card">
+                                <svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                <span class="role-title">Teacher</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="Choose a username" required>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="your.email@example.com" required>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Create a strong password" required>
+                    <small class="form-hint">At least 8 characters</small>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Re-enter your password" required>
+                </div>
+
+                <!-- Year Group (Student only) -->
+                <div class="form-group" id="yearGroupSection">
+                    <label for="yearGroup" class="form-label">Year Group</label>
+                    <select id="yearGroup" class="form-select">
+                        <option value="">Select your year</option>
+                        <option value="year-1">Year 1</option>
+                        <option value="year-2">Year 2</option>
+                        <option value="year-3">Year 3</option>
+                        <option value="year-4">Year 4</option>
+                        <option value="year-5">Year 5</option>
+                        <option value="year-6">Year 6</option>
+                        <option value="year-7">Year 7</option>
+                        <option value="year-8">Year 8</option>
+                        <option value="year-9">Year 9</option>
+                        <option value="year-10">Year 10</option>
+                        <option value="year-11">Year 11</option>
+                    </select>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+                    <span>Create Account</span>
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </button>
+
+                <!-- Login Link -->
+                <p class="auth-footer">
+                    Already have an account? 
+                    <a href="login.html" class="auth-link">Log in</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Load Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Inline Supabase Config & Auth Logic -->
+    <script>
+        // ==========================================
+        // SUPABASE CONFIGURATION
+        // ==========================================
+        // TODO: Replace with your actual Supabase credentials
+        const SUPABASE_URL = 'https://qqbyxydxxcuklakvjlfr.supabase.co';
+       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw';
+        
+        // Initialize Supabase client
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // ==========================================
+        // SIGN UP LOGIC
+        // ==========================================
+        const signupForm = document.getElementById('signupForm');
+        const roleInputs = document.querySelectorAll('input[name="role"]');
+        const yearGroupSection = document.getElementById('yearGroupSection');
+        
+        // Show/hide year group based on role
+        roleInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                if (e.target.value === 'student') {
+                    yearGroupSection.style.display = 'block';
+                } else {
+                    yearGroupSection.style.display = 'none';
+                }
+            });
+        });
+
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const yearGroup = document.getElementById('yearGroup').value;
+            
+            const errorMessage = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Clear previous errors
+            errorMessage.style.display = 'none';
+            
+            // Validation
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            if (password.length < 8) {
+                errorMessage.textContent = 'Password must be at least 8 characters long';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            if (role === 'student' && !yearGroup) {
+                errorMessage.textContent = 'Please select your year group';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.classList.add('btn-loading');
+            submitBtn.disabled = true;
+            
+            try {
+                console.log('Attempting sign up...');
+                
+                // Sign up with Supabase
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            username: username,
+                            role: role,
+                            year_group: role === 'student' ? yearGroup : null
+                        }
+                    }
+                });
+                
+                if (error) throw error;
+                
+                console.log('Sign up successful! Profile created automatically by database trigger.');
+                
+                // Show success message
+                alert('Account created successfully! Please check your email to verify your account.');
+                
+                // Redirect to login page
+                setTimeout(() => {
+                    window.location.href = './login.html';
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Sign up error:', error);
+                errorMessage.textContent = error.message || 'An error occurred during sign up';
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.classList.remove('btn-loading');
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+    
+    <!-- Load global scripts -->
     <script src="../script.js"></script>
 </body>
 </html>
