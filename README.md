@@ -37,3 +37,31 @@ This project is open source, welcoming contributions, and aims to provide detail
 1. Clone the repo:
    ```bash
    git clone https://github.com/yourusername/BrainMapRevision.git
+
+2. Install dependencies:
+   ```
+   cd BrainMapRevision
+   npm install
+
+3. Run the development server:
+    ```
+    npm start
+    
+### Usage
+ 
+* Browse available revision guides
+
+* Create your own revision boards
+
+* Add and organize study materials
+
+* Share your boards with the community
+
+### Contributing
+
+
+Contributions are welcome! If you'd like to add new revision guides or features, please read CONTRIBUTING.md for guidelines.
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
