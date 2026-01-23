@@ -312,3 +312,76 @@
         padding: 25px 20px;
     }
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 40px 15px;
+    }
+
+    .welcome-title {
+        font-size: 2rem;
+    }
+
+    .user-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        min-width: 120px;
+        padding: 20px;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-title {
+        font-size: 1.75rem;
+    }
+
+    .user-stats {
+        gap: 15px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .action-card {
+        padding: 25px 20px;
+    }
+}
+
+/* Teacher-specific styles */
+.teacher-only {
+    border: 2px solid #10B981 !important;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.teacher-only:hover {
+    background: rgba(16, 185, 129, 0.1);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+}
+
+.teacher-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 8px;
+    vertical-align: middle;
+}

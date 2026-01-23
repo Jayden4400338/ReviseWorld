@@ -99,6 +99,87 @@
     }
   }
 
+
+
+  // ======================
+  // UPDATE DASHBOARD UI
+  // ======================
+  function updateDashboardUI() {
+    if (!userProfile) {
+      console.warn('No user profile to display');
+      return;
+    }
+
+    console.log('Updating dashboard UI...');
+
+    // Update username
+    if (usernameEl) {
+      usernameEl.textContent = userProfile.username || 'Student';
+    }
+
+    // Update stats
+    if (userLevelEl) userLevelEl.textContent = userProfile.level || 1;
+    if (userXPEl) userXPEl.textContent = (userProfile.xp || 0).toLocaleString();
+    if (userCoinsEl) userCoinsEl.textContent = (userProfile.brain_coins || 0).toLocaleString();
+    if (userHintsEl) userHintsEl.textContent = userProfile.hint_tokens || 5;
+
+    updateLevelProgress();
+    animateDashboardStats();
+    
+    // Show teacher-specific content if user is a teacher
+    if (userProfile.role === 'teacher') {
+      showTeacherDashboard();
+    } else {
+      showStudentDashboard();
+    }
+  }
+  
+  // ======================
+  // TEACHER DASHBOARD
+  // ======================
+  function showTeacherDashboard() {
+    const quickActionsGrid = document.querySelector('.quick-actions');
+    if (!quickActionsGrid) return;
+    
+    // Add teacher-specific action cards
+    const teacherCard = document.createElement('a');
+    teacherCard.href = 'classroom/dashboard.html';
+    teacherCard.className = 'action-card teacher-only';
+    teacherCard.innerHTML = `
+      <div class="action-icon" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <h3 class="action-title">My Classrooms</h3>
+      <p class="action-description">Manage your classes and students</p>
+    `;
+    
+    // Insert teacher card at the beginning
+    quickActionsGrid.insertBefore(teacherCard, quickActionsGrid.firstChild);
+    
+    // Update welcome message
+    const welcomeTitle = document.querySelector('.welcome-title');
+    if (welcomeTitle) {
+      welcomeTitle.innerHTML = `Welcome back, <span id="username">${userProfile.username}</span>! 👨‍🏫`;
+    }
+    
+    console.log('✅ Teacher dashboard loaded');
+  }
+  
+  // ======================
+  // STUDENT DASHBOARD
+  // ======================
+  function showStudentDashboard() {
+    // Remove any teacher-only elements that might exist
+    const teacherElements = document.querySelectorAll('.teacher-only');
+    teacherElements.forEach(el => el.remove());
+    
+    console.log('✅ Student dashboard loaded');
+  }
   // ======================
   // LOAD USER PROFILE
   // ======================
