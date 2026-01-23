@@ -1,11 +1,15 @@
-// Dashboard JavaScript
+// Dashboard JavaScript - FIXED VERSION
 
-// Get Supabase client (initialized in HTML)
-const supabase = window.supabaseClient || window.supabase;
+// Get Supabase client from global scope
+const supabase = window.supabaseClient || window.supabase?.createClient(
+    'https://qqbyxydxxcuklakvjlfr.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw'
+);
 
 // Check if Supabase is available
 if (!supabase) {
-    console.error('Supabase client not found! Make sure it is initialized in the HTML.');
+    console.error('Supabase client not found! Redirecting to login...');
+    window.location.href = '../auth/login.html';
 }
 
 // DOM Elements
@@ -26,7 +30,14 @@ let userProfile = null;
 // ======================
 async function checkAuthentication() {
     try {
-        const { data: { session } } = await supabase.auth.getSession();
+        console.log('Checking authentication...');
+        
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+            console.error('Session error:', error);
+            throw error;
+        }
         
         if (!session) {
             console.log('No session found, redirecting to login...');
@@ -34,6 +45,7 @@ async function checkAuthentication() {
             return false;
         }
 
+        console.log('Session found:', session.user.email);
         currentUser = session.user;
         return true;
     } catch (error) {
@@ -47,28 +59,40 @@ async function checkAuthentication() {
 // LOAD USER PROFILE
 // ======================
 async function loadUserProfile() {
-    if (!currentUser) return;
+    if (!currentUser) {
+        console.error('No current user!');
+        return;
+    }
 
     try {
+        console.log('Loading user profile for:', currentUser.id);
+        
         const { data, error } = await supabase
             .from('users')
             .select('*')
             .eq('id', currentUser.id)
             .single();
 
-        if (error) throw error;
+        if (error) {
+            console.error('Error loading profile:', error);
+            
+            // If profile doesn't exist, create it
+            if (error.code === 'PGRST116') {
+                console.log('Profile not found, creating...');
+                await createUserProfile();
+                return;
+            }
+            throw error;
+        }
 
+        console.log('Profile loaded successfully:', data);
         userProfile = data;
         updateDashboardUI();
         
-        console.log('User profile loaded:', userProfile);
     } catch (error) {
-        console.error('Error loading user profile:', error);
-        
-        // If profile doesn't exist, create it
-        if (error.code === 'PGRST116') {
-            await createUserProfile();
-        }
+        console.error('Error in loadUserProfile:', error);
+        // Show error to user but don't redirect
+        alert('Error loading profile. Please refresh the page.');
     }
 }
 
@@ -77,6 +101,8 @@ async function loadUserProfile() {
 // ======================
 async function createUserProfile() {
     try {
+        console.log('Creating user profile...');
+        
         const { data, error } = await supabase
             .from('users')
             .insert({
@@ -93,14 +119,18 @@ async function createUserProfile() {
             .select()
             .single();
 
-        if (error) throw error;
+        if (error) {
+            console.error('Error creating profile:', error);
+            throw error;
+        }
 
+        console.log('Profile created successfully:', data);
         userProfile = data;
         updateDashboardUI();
         
-        console.log('User profile created:', userProfile);
     } catch (error) {
         console.error('Error creating user profile:', error);
+        alert('Error creating profile. Please try logging in again.');
     }
 }
 
@@ -108,16 +138,23 @@ async function createUserProfile() {
 // UPDATE DASHBOARD UI
 // ======================
 function updateDashboardUI() {
-    if (!userProfile) return;
+    if (!userProfile) {
+        console.warn('No user profile to display');
+        return;
+    }
+
+    console.log('Updating dashboard UI with profile:', userProfile);
 
     // Update username
-    usernameEl.textContent = userProfile.username;
+    if (usernameEl) {
+        usernameEl.textContent = userProfile.username || 'Student';
+    }
 
     // Update stats
-    userLevelEl.textContent = userProfile.level;
-    userXPEl.textContent = userProfile.xp.toLocaleString();
-    userCoinsEl.textContent = userProfile.brain_coins.toLocaleString();
-    userHintsEl.textContent = userProfile.hint_tokens;
+    if (userLevelEl) userLevelEl.textContent = userProfile.level || 1;
+    if (userXPEl) userXPEl.textContent = (userProfile.xp || 0).toLocaleString();
+    if (userCoinsEl) userCoinsEl.textContent = (userProfile.brain_coins || 0).toLocaleString();
+    if (userHintsEl) userHintsEl.textContent = userProfile.hint_tokens || 5;
 
     // Calculate XP progress to next level
     updateLevelProgress();
@@ -130,8 +167,10 @@ function updateDashboardUI() {
 // CALCULATE LEVEL PROGRESS
 // ======================
 function updateLevelProgress() {
-    const currentLevel = userProfile.level;
-    const currentXP = userProfile.xp;
+    if (!userProfile) return;
+    
+    const currentLevel = userProfile.level || 1;
+    const currentXP = userProfile.xp || 0;
     
     // Calculate XP needed for current and next level
     const currentLevelXP = ((currentLevel - 1) * (currentLevel - 1)) * 100;
@@ -140,15 +179,23 @@ function updateLevelProgress() {
     // Calculate progress percentage
     const xpInCurrentLevel = currentXP - currentLevelXP;
     const xpNeededForLevel = nextLevelXP - currentLevelXP;
-    const progressPercentage = (xpInCurrentLevel / xpNeededForLevel) * 100;
+    const progressPercentage = Math.max(0, Math.min(100, (xpInCurrentLevel / xpNeededForLevel) * 100));
 
-    // Update progress bar if it exists
+    console.log('Level progress:', {
+        currentLevel,
+        currentXP,
+        xpInCurrentLevel,
+        xpNeededForLevel,
+        progressPercentage
+    });
+
+    // Update progress bar
     const progressBar = document.querySelector('.progress-bar-fill');
     if (progressBar) {
-        progressBar.style.width = Math.min(progressPercentage, 100) + '%';
+        progressBar.style.width = progressPercentage + '%';
     }
 
-    // Update progress label if it exists
+    // Update progress label
     const progressLabel = document.querySelector('.progress-label');
     if (progressLabel) {
         progressLabel.innerHTML = `
@@ -192,9 +239,14 @@ async function loadRecentActivity() {
             .order('completed_at', { ascending: false })
             .limit(5);
 
-        if (error) throw error;
+        if (error) {
+            console.error('Error loading activity:', error);
+            return;
+        }
 
-        displayRecentActivity(recentQuizzes);
+        if (recentQuizzes && recentQuizzes.length > 0) {
+            displayRecentActivity(recentQuizzes);
+        }
     } catch (error) {
         console.error('Error loading recent activity:', error);
     }
@@ -228,6 +280,12 @@ function displayRecentActivity(activities) {
             </div>
         </div>
     `).join('');
+    
+    // Show the activity section
+    const activitySection = document.querySelector('.recent-activity');
+    if (activitySection) {
+        activitySection.style.display = 'block';
+    }
 }
 
 // ======================
@@ -251,12 +309,16 @@ function formatTimeAgo(timestamp) {
 // ======================
 async function handleLogout() {
     try {
+        console.log('Logging out...');
+        
         const { error } = await supabase.auth.signOut();
         
         if (error) throw error;
 
         // Clear local storage
         localStorage.removeItem('rememberMe');
+        
+        console.log('Logout successful');
         
         // Redirect to home page
         window.location.href = '../index.html';
@@ -270,6 +332,7 @@ async function handleLogout() {
 // HIDE LOADING OVERLAY
 // ======================
 function hideLoading() {
+    console.log('Hiding loading overlay...');
     if (loadingOverlay) {
         loadingOverlay.classList.add('hidden');
     }
@@ -279,22 +342,31 @@ function hideLoading() {
 // INITIALIZE DASHBOARD
 // ======================
 async function initializeDashboard() {
-    console.log('Initializing dashboard...');
+    console.log('=== Initializing dashboard ===');
 
-    // Check authentication
-    const isAuthenticated = await checkAuthentication();
-    if (!isAuthenticated) return;
+    try {
+        // Check authentication
+        const isAuthenticated = await checkAuthentication();
+        if (!isAuthenticated) {
+            console.log('Not authenticated, stopping initialization');
+            return;
+        }
 
-    // Load user profile
-    await loadUserProfile();
+        // Load user profile
+        await loadUserProfile();
 
-    // Load recent activity (optional)
-    await loadRecentActivity();
+        // Load recent activity (optional)
+        await loadRecentActivity();
 
-    // Hide loading overlay
-    hideLoading();
+        // Hide loading overlay
+        hideLoading();
 
-    console.log('Dashboard initialized successfully!');
+        console.log('=== Dashboard initialized successfully! ===');
+    } catch (error) {
+        console.error('Error initializing dashboard:', error);
+        hideLoading();
+        alert('Error loading dashboard. Please try refreshing the page.');
+    }
 }
 
 // ======================
@@ -307,7 +379,6 @@ if (logoutBtn) {
 // Add click handlers for action cards
 document.querySelectorAll('.action-card').forEach(card => {
     card.addEventListener('click', (e) => {
-        // Add ripple effect or animation here if desired
         console.log('Navigating to:', card.href);
     });
 });
@@ -315,13 +386,18 @@ document.querySelectorAll('.action-card').forEach(card => {
 // ======================
 // RUN ON PAGE LOAD
 // ======================
-document.addEventListener('DOMContentLoaded', initializeDashboard);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing dashboard...');
+    initializeDashboard();
+});
 
 // Listen for auth state changes
-supabase.auth.onAuthStateChange((event, session) => {
-    console.log('Auth state changed:', event);
-    
-    if (event === 'SIGNED_OUT') {
-        window.location.href = '../auth/login.html';
-    }
-});
+if (supabase && supabase.auth) {
+    supabase.auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event, session ? 'User logged in' : 'No session');
+        
+        if (event === 'SIGNED_OUT') {
+            window.location.href = '../auth/login.html';
+        }
+    });
+}

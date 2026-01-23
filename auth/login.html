@@ -112,12 +112,14 @@
         // ==========================================
         // SUPABASE CONFIGURATION
         // ==========================================
-        // TODO: Replace with your actual Supabase credentials
         const SUPABASE_URL = 'https://qqbyxydxxcuklakvjlfr.supabase.co';
-       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw';
         
-        // Initialize Supabase client (use different variable name to avoid conflicts)
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Initialize Supabase client - USE CONSISTENT VARIABLE NAME
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Also create global reference for compatibility
+        window.supabaseClient = supabase;
         
         // ==========================================
         // LOGIN LOGIC
@@ -143,23 +145,31 @@
             submitBtn.disabled = true;
             
             try {
-                console.log('Attempting login...');
+                console.log('Attempting login for:', email);
                 
                 // Sign in with Supabase
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Login error:', error);
+                    throw error;
+                }
                 
                 console.log('Login successful!', data);
                 
                 // Update last login time
-                await supabaseClient
-                    .from('users')
-                    .update({ last_login: new Date().toISOString() })
-                    .eq('id', data.user.id);
+                try {
+                    await supabase
+                        .from('users')
+                        .update({ last_login: new Date().toISOString() })
+                        .eq('id', data.user.id);
+                } catch (updateError) {
+                    console.warn('Could not update last login:', updateError);
+                    // Don't fail login if this fails
+                }
                 
                 // Store session if remember me is checked
                 if (rememberMe) {
@@ -177,9 +187,9 @@
                 
             } catch (error) {
                 console.error('Login error:', error);
-                errorMessage.textContent = error.message || 'Invalid email or password';
+                errorMessage.textContent = error.message || 'Invalid email or password. Please try again.';
                 errorMessage.style.display = 'block';
-            } finally {
+                
                 submitBtn.classList.remove('btn-loading');
                 submitBtn.disabled = false;
             }
@@ -189,11 +199,15 @@
         // CHECK IF ALREADY LOGGED IN
         // ==========================================
         window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            
-            if (session) {
-                console.log('User already logged in, redirecting...');
-                window.location.href = '../pages/dashboard.html';
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    console.log('User already logged in, redirecting...');
+                    window.location.href = '../pages/dashboard.html';
+                }
+            } catch (error) {
+                console.error('Session check error:', error);
             }
         });
     </script>

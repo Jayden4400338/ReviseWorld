@@ -1,356 +1,444 @@
-// Authentication Functions for BrainMapRevision
+// Enhanced Authentication Functions for BrainMapRevision
+// Includes username and email uniqueness validation
 
 // Get Supabase client from global scope
-const supabase = window.supabaseClient;
+const supabase = window.supabaseClient || window.supabase?.createClient(
+    'https://qqbyxydxxcuklakvjlfr.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw'
+);
+
+// ======================
+// VALIDATION FUNCTIONS
+// ======================
+
+/**
+ * Validate username format
+ * @param {string} username - Username to validate
+ * @returns {Object} - {valid: boolean, error: string}
+ */
+function validateUsernameFormat(username) {
+    if (!username || username.trim().length === 0) {
+        return { valid: false, error: 'Username is required' };
+    }
+    
+    if (username.length < 3) {
+        return { valid: false, error: 'Username must be at least 3 characters' };
+    }
+    
+    if (username.length > 50) {
+        return { valid: false, error: 'Username must be less than 50 characters' };
+    }
+    
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        return { valid: false, error: 'Username can only contain letters, numbers, and underscores' };
+    }
+    
+    return { valid: true };
+}
+
+/**
+ * Check if username is available in database
+ * @param {string} username - Username to check
+ * @returns {Promise<boolean>} - True if available, false if taken
+ */
+async function isUsernameAvailable(username) {
+    try {
+        // Use RPC function for case-insensitive check
+        const { data, error } = await supabase
+            .rpc('check_username_available', { username_to_check: username });
+        
+        if (error) {
+            console.error('Username check error:', error);
+            // Fallback to direct query if RPC fails
+            const { data: users, error: queryError } = await supabase
+                .from('users')
+                .select('username')
+                .ilike('username', username)
+                .limit(1);
+            
+            if (queryError) throw queryError;
+            return users.length === 0;
+        }
+        
+        return data === true;
+    } catch (error) {
+        console.error('Error checking username availability:', error);
+        // On error, assume not available to be safe
+        return false;
+    }
+}
+
+/**
+ * Check if email is available in database
+ * @param {string} email - Email to check
+ * @returns {Promise<boolean>} - True if available, false if taken
+ */
+async function isEmailAvailable(email) {
+    try {
+        // Use RPC function for case-insensitive check
+        const { data, error } = await supabase
+            .rpc('check_email_available', { email_to_check: email });
+        
+        if (error) {
+            console.error('Email check error:', error);
+            // Fallback to direct query if RPC fails
+            const { data: users, error: queryError } = await supabase
+                .from('users')
+                .select('email')
+                .ilike('email', email)
+                .limit(1);
+            
+            if (queryError) throw queryError;
+            return users.length === 0;
+        }
+        
+        return data === true;
+    } catch (error) {
+        console.error('Error checking email availability:', error);
+        return false;
+    }
+}
+
+/**
+ * Validate email format
+ * @param {string} email - Email to validate
+ * @returns {Object} - {valid: boolean, error: string}
+ */
+function validateEmailFormat(email) {
+    if (!email || email.trim().length === 0) {
+        return { valid: false, error: 'Email is required' };
+    }
+    
+    // Basic email regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return { valid: false, error: 'Please enter a valid email address' };
+    }
+    
+    return { valid: true };
+}
+
+/**
+ * Validate password
+ * @param {string} password - Password to validate
+ * @param {string} confirmPassword - Password confirmation
+ * @returns {Object} - {valid: boolean, error: string}
+ */
+function validatePassword(password, confirmPassword) {
+    if (!password || password.length === 0) {
+        return { valid: false, error: 'Password is required' };
+    }
+    
+    if (password.length < 8) {
+        return { valid: false, error: 'Password must be at least 8 characters' };
+    }
+    
+    if (confirmPassword && password !== confirmPassword) {
+        return { valid: false, error: 'Passwords do not match' };
+    }
+    
+    return { valid: true };
+}
 
 // ======================
 // SIGN UP
 // ======================
-const signupForm = document.getElementById('signupForm');
-if (signupForm) {
-    // Show/hide year group based on role selection
-    const roleInputs = document.querySelectorAll('input[name="role"]');
-    const yearGroupSection = document.getElementById('yearGroupSection');
-    
-    roleInputs.forEach(input => {
-        input.addEventListener('change', (e) => {
-            if (e.target.value === 'student') {
-                yearGroupSection.style.display = 'block';
-            } else {
-                yearGroupSection.style.display = 'none';
-            }
-        });
-    });
 
-    signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const username = document.getElementById('username').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-        const role = document.querySelector('input[name="role"]:checked').value;
-        const yearGroup = document.getElementById('yearGroup').value;
-        
-        const errorMessage = document.getElementById('errorMessage');
-        const submitBtn = document.getElementById('submitBtn');
-        
-        // Clear previous errors
-        errorMessage.style.display = 'none';
-        
-        // Validation
-        if (password !== confirmPassword) {
-            showError('Passwords do not match');
-            return;
+/**
+ * Sign up a new user
+ * @param {Object} userData - User data object
+ * @returns {Promise<Object>} - {success: boolean, user: Object, error: string}
+ */
+async function signUp(userData) {
+    const { username, email, password, confirmPassword, role, yearGroup } = userData;
+    
+    try {
+        // Validate username format
+        const usernameValidation = validateUsernameFormat(username);
+        if (!usernameValidation.valid) {
+            throw new Error(usernameValidation.error);
         }
         
-        if (password.length < 8) {
-            showError('Password must be at least 8 characters long');
-            return;
+        // Validate email format
+        const emailValidation = validateEmailFormat(email);
+        if (!emailValidation.valid) {
+            throw new Error(emailValidation.error);
         }
         
+        // Validate password
+        const passwordValidation = validatePassword(password, confirmPassword);
+        if (!passwordValidation.valid) {
+            throw new Error(passwordValidation.error);
+        }
+        
+        // Validate year group for students
         if (role === 'student' && !yearGroup) {
-            showError('Please select your year group');
-            return;
+            throw new Error('Please select your year group');
         }
         
-        // Show loading state
-        submitBtn.classList.add('btn-loading');
-        submitBtn.disabled = true;
+        // Check username availability
+        const usernameAvailable = await isUsernameAvailable(username);
+        if (!usernameAvailable) {
+            throw new Error('Username is already taken. Please choose another one.');
+        }
         
-        try {
-            // Sign up with Supabase
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-                options: {
-                    data: {
-                        username: username,
-                        role: role,
-                        year_group: role === 'student' ? yearGroup : null
-                    }
-                }
-            });
-            
-            if (error) throw error;
-            
-            // Create user profile in database
-            const { error: profileError } = await supabase
-                .from('users')
-                .insert({
-                    id: data.user.id,
-                    email: email,
+        // Check email availability
+        const emailAvailable = await isEmailAvailable(email);
+        if (!emailAvailable) {
+            throw new Error('Email is already registered. Please use another email or try logging in.');
+        }
+        
+        // Sign up with Supabase Auth
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
                     username: username,
                     role: role,
-                    year_group: role === 'student' ? yearGroup : null,
-                    xp: 0,
-                    level: 1,
-                    brain_coins: 0,
-                    hint_tokens: 5
-                });
-            
-            if (profileError) throw profileError;
-            
-            // Show success message
-            alert('Account created successfully! Please check your email to verify your account.');
-            window.location.href = 'login.html';
-            
-        } catch (error) {
-            console.error('Sign up error:', error);
-            showError(error.message || 'An error occurred during sign up');
-        } finally {
-            submitBtn.classList.remove('btn-loading');
-            submitBtn.disabled = false;
+                    year_group: role === 'student' ? yearGroup : null
+                }
+            }
+        });
+        
+        if (error) throw error;
+        
+        // The database trigger will create the user profile automatically
+        // But we can verify it was created
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+        
+        const { data: profile, error: profileError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', data.user.id)
+            .single();
+        
+        if (profileError) {
+            console.warn('Profile verification warning:', profileError);
         }
-    });
+        
+        return {
+            success: true,
+            user: data.user,
+            profile: profile
+        };
+        
+    } catch (error) {
+        console.error('Sign up error:', error);
+        return {
+            success: false,
+            error: error.message || 'An error occurred during sign up'
+        };
+    }
 }
 
 // ======================
 // LOGIN
 // ======================
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const rememberMe = document.getElementById('rememberMe').checked;
-        
-        const errorMessage = document.getElementById('errorMessage');
-        const submitBtn = document.getElementById('submitBtn');
-        
-        // Clear previous errors
-        errorMessage.style.display = 'none';
-        
-        // Show loading state
-        submitBtn.classList.add('btn-loading');
-        submitBtn.disabled = true;
-        
-        try {
-            // Sign in with Supabase
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
-            
-            if (error) throw error;
-            
-            // Update last login time
-            await supabase
-                .from('users')
-                .update({ last_login: new Date().toISOString() })
-                .eq('id', data.user.id);
-            
-            // Store session if remember me is checked
-            if (rememberMe) {
-                localStorage.setItem('rememberMe', 'true');
-            }
-            
-            // Redirect to dashboard/home
-            window.location.href = '../pages/subjects.html';
-            
-        } catch (error) {
-            console.error('Login error:', error);
-            showError('Invalid email or password');
-        } finally {
-            submitBtn.classList.remove('btn-loading');
-            submitBtn.disabled = false;
+
+/**
+ * Sign in a user
+ * @param {string} email - User email
+ * @param {string} password - User password
+ * @param {boolean} rememberMe - Remember user session
+ * @returns {Promise<Object>} - {success: boolean, user: Object, error: string}
+ */
+async function signIn(email, password, rememberMe = false) {
+    try {
+        // Validate inputs
+        if (!email || !password) {
+            throw new Error('Email and password are required');
         }
-    });
-    
-    // Google Sign In
-    const googleLoginBtn = document.getElementById('googleLoginBtn');
-    if (googleLoginBtn) {
-        googleLoginBtn.addEventListener('click', async () => {
-            try {
-                const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        redirectTo: window.location.origin + '/pages/subjects.html'
-                    }
-                });
-                
-                if (error) throw error;
-            } catch (error) {
-                console.error('Google login error:', error);
-                showError('Google login failed');
-            }
+        
+        // Sign in with Supabase
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
         });
+        
+        if (error) throw error;
+        
+        // Update last login time
+        await supabase
+            .from('users')
+            .update({ last_login: new Date().toISOString() })
+            .eq('id', data.user.id);
+        
+        // Store session preference
+        if (rememberMe) {
+            localStorage.setItem('rememberMe', 'true');
+        }
+        
+        return {
+            success: true,
+            user: data.user
+        };
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        return {
+            success: false,
+            error: error.message || 'Invalid email or password'
+        };
     }
 }
 
 // ======================
-// RESET PASSWORD
+// SIGN OUT
 // ======================
-const resetPasswordForm = document.getElementById('resetPasswordForm');
-if (resetPasswordForm) {
-    resetPasswordForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value.trim();
-        const errorMessage = document.getElementById('errorMessage');
-        const successMessage = document.getElementById('successMessage');
-        const submitBtn = document.getElementById('submitBtn');
-        
-        // Clear previous messages
-        errorMessage.style.display = 'none';
-        successMessage.style.display = 'none';
-        
-        // Show loading state
-        submitBtn.classList.add('btn-loading');
-        submitBtn.disabled = true;
-        
-        try {
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + '/auth/reset-password.html'
-            });
-            
-            if (error) throw error;
-            
-            // Show success message
-            successMessage.textContent = 'Password reset link sent! Check your email.';
-            successMessage.style.display = 'block';
-            
-            // Clear form
-            resetPasswordForm.reset();
-            
-        } catch (error) {
-            console.error('Password reset error:', error);
-            errorMessage.textContent = error.message || 'Failed to send reset link';
-            errorMessage.style.display = 'block';
-        } finally {
-            submitBtn.classList.remove('btn-loading');
-            submitBtn.disabled = false;
-        }
-    });
-}
 
-// ======================
-// UPDATE PASSWORD (from email link)
-// ======================
-const updatePasswordForm = document.getElementById('updatePasswordForm');
-if (updatePasswordForm) {
-    // Check if user came from password reset link
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get('access_token');
-    const type = hashParams.get('type');
-    
-    if (type === 'recovery' && accessToken) {
-        // Show update password form instead of reset form
-        document.getElementById('resetPasswordForm').style.display = 'none';
-        updatePasswordForm.style.display = 'block';
-    }
-    
-    updatePasswordForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+/**
+ * Sign out the current user
+ * @returns {Promise<Object>} - {success: boolean, error: string}
+ */
+async function signOut() {
+    try {
+        const { error } = await supabase.auth.signOut();
         
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-        const errorMessage = document.getElementById('updateErrorMessage');
-        const submitBtn = document.getElementById('updateBtn');
+        if (error) throw error;
         
-        // Clear previous errors
-        errorMessage.style.display = 'none';
+        // Clear local storage
+        localStorage.removeItem('rememberMe');
         
-        // Validation
-        if (newPassword !== confirmPassword) {
-            errorMessage.textContent = 'Passwords do not match';
-            errorMessage.style.display = 'block';
-            return;
-        }
+        return { success: true };
         
-        if (newPassword.length < 8) {
-            errorMessage.textContent = 'Password must be at least 8 characters long';
-            errorMessage.style.display = 'block';
-            return;
-        }
-        
-        // Show loading state
-        submitBtn.classList.add('btn-loading');
-        submitBtn.disabled = true;
-        
-        try {
-            const { error } = await supabase.auth.updateUser({
-                password: newPassword
-            });
-            
-            if (error) throw error;
-            
-            // Show success and redirect
-            alert('Password updated successfully! Please log in with your new password.');
-            window.location.href = 'login.html';
-            
-        } catch (error) {
-            console.error('Update password error:', error);
-            errorMessage.textContent = error.message || 'Failed to update password';
-            errorMessage.style.display = 'block';
-        } finally {
-            submitBtn.classList.remove('btn-loading');
-            submitBtn.disabled = false;
-        }
-    });
-}
-
-// ======================
-// HELPER FUNCTIONS
-// ======================
-function showError(message) {
-    const errorMessage = document.getElementById('errorMessage');
-    if (errorMessage) {
-        errorMessage.textContent = message;
-        errorMessage.style.display = 'block';
+    } catch (error) {
+        console.error('Sign out error:', error);
+        return {
+            success: false,
+            error: error.message || 'Failed to sign out'
+        };
     }
 }
 
-// Check if user is already logged in
-async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (session) {
-        // User is logged in, redirect to dashboard
-        const currentPage = window.location.pathname;
-        if (currentPage.includes('login.html') || currentPage.includes('signup.html')) {
-            window.location.href = '../pages/subjects.html';
-        }
-    }
-}
+// ======================
+// GET CURRENT USER
+// ======================
 
-// Get current user
+/**
+ * Get the current authenticated user
+ * @returns {Promise<Object|null>} - User object or null
+ */
 async function getCurrentUser() {
-    const { data: { user } } = await supabase.auth.getUser();
-    return user;
-}
-
-// Get user profile from database
-async function getUserProfile(userId) {
-    const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single();
-    
-    if (error) {
-        console.error('Error fetching user profile:', error);
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        return user;
+    } catch (error) {
+        console.error('Get user error:', error);
         return null;
     }
-    
-    return data;
 }
 
-// Sign out
-async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    
-    if (!error) {
-        localStorage.removeItem('rememberMe');
-        window.location.href = '../index.html';
-    } else {
-        console.error('Sign out error:', error);
+/**
+ * Get the current user's profile from database
+ * @param {string} userId - User ID
+ * @returns {Promise<Object|null>} - User profile or null
+ */
+async function getUserProfile(userId) {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', userId)
+            .single();
+        
+        if (error) throw error;
+        
+        return data;
+    } catch (error) {
+        console.error('Get profile error:', error);
+        return null;
     }
 }
 
-// Check authentication on page load
-document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
-});
+// ======================
+// CHECK AUTHENTICATION
+// ======================
+
+/**
+ * Check if user is authenticated
+ * @returns {Promise<boolean>} - True if authenticated
+ */
+async function isAuthenticated() {
+    const user = await getCurrentUser();
+    return user !== null;
+}
+
+// ======================
+// PASSWORD RESET
+// ======================
+
+/**
+ * Request password reset email
+ * @param {string} email - User email
+ * @returns {Promise<Object>} - {success: boolean, error: string}
+ */
+async function resetPassword(email) {
+    try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/auth/reset-password.html'
+        });
+        
+        if (error) throw error;
+        
+        return { success: true };
+        
+    } catch (error) {
+        console.error('Password reset error:', error);
+        return {
+            success: false,
+            error: error.message || 'Failed to send reset email'
+        };
+    }
+}
+
+/**
+ * Update user password
+ * @param {string} newPassword - New password
+ * @returns {Promise<Object>} - {success: boolean, error: string}
+ */
+async function updatePassword(newPassword) {
+    try {
+        if (newPassword.length < 8) {
+            throw new Error('Password must be at least 8 characters');
+        }
+        
+        const { error } = await supabase.auth.updateUser({
+            password: newPassword
+        });
+        
+        if (error) throw error;
+        
+        return { success: true };
+        
+    } catch (error) {
+        console.error('Update password error:', error);
+        return {
+            success: false,
+            error: error.message || 'Failed to update password'
+        };
+    }
+}
+
+// ======================
+// EXPORT FUNCTIONS
+// ======================
+
+// Make functions available globally
+if (typeof window !== 'undefined') {
+    window.BrainMapAuth = {
+        signUp,
+        signIn,
+        signOut,
+        getCurrentUser,
+        getUserProfile,
+        isAuthenticated,
+        resetPassword,
+        updatePassword,
+        validateUsernameFormat,
+        validateEmailFormat,
+        validatePassword,
+        isUsernameAvailable,
+        isEmailAvailable
+    };
+}

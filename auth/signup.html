@@ -90,13 +90,15 @@
                 <!-- Username -->
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" id="username" class="form-input" placeholder="Choose a username" required>
+                    <input type="text" id="username" class="form-input" placeholder="Choose a unique username" required minlength="3" maxlength="50">
+                    <small class="form-hint" id="usernameHint">3-50 characters, letters, numbers, and underscores only</small>
                 </div>
 
                 <!-- Email -->
                 <div class="form-group">
                     <label for="email" class="form-label">Email Address</label>
                     <input type="email" id="email" class="form-input" placeholder="your.email@example.com" required>
+                    <small class="form-hint" id="emailHint">We'll send a verification email</small>
                 </div>
 
                 <!-- Password -->
@@ -160,12 +162,105 @@
         // ==========================================
         // SUPABASE CONFIGURATION
         // ==========================================
-        // TODO: Replace with your actual Supabase credentials
         const SUPABASE_URL = 'https://qqbyxydxxcuklakvjlfr.supabase.co';
-       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw';
         
         // Initialize Supabase client
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        window.supabaseClient = supabase;
+        
+        // ==========================================
+        // USERNAME VALIDATION
+        // ==========================================
+        const usernameInput = document.getElementById('username');
+        const usernameHint = document.getElementById('usernameHint');
+        
+        // Real-time username validation
+        usernameInput.addEventListener('input', (e) => {
+            const username = e.target.value;
+            
+            // Check format (alphanumeric and underscores only)
+            const validFormat = /^[a-zA-Z0-9_]+$/.test(username);
+            
+            if (username.length > 0 && !validFormat) {
+                usernameHint.textContent = '⚠️ Only letters, numbers, and underscores allowed';
+                usernameHint.style.color = '#F56565';
+                e.target.style.borderColor = '#F56565';
+            } else if (username.length >= 3) {
+                usernameHint.textContent = '✓ Valid format';
+                usernameHint.style.color = '#48BB78';
+                e.target.style.borderColor = '#48BB78';
+            } else {
+                usernameHint.textContent = '3-50 characters, letters, numbers, and underscores only';
+                usernameHint.style.color = '';
+                e.target.style.borderColor = '';
+            }
+        });
+        
+        // Check if username exists (with debounce)
+        let usernameCheckTimeout;
+        usernameInput.addEventListener('blur', async () => {
+            const username = usernameInput.value.trim();
+            
+            if (username.length < 3) return;
+            
+            clearTimeout(usernameCheckTimeout);
+            usernameCheckTimeout = setTimeout(async () => {
+                try {
+                    const { data, error } = await supabase
+                        .from('users')
+                        .select('username')
+                        .eq('username', username)
+                        .single();
+                    
+                    if (data) {
+                        usernameHint.textContent = '❌ Username already taken';
+                        usernameHint.style.color = '#F56565';
+                        usernameInput.style.borderColor = '#F56565';
+                    } else if (error && error.code === 'PGRST116') {
+                        // No user found - username is available
+                        usernameHint.textContent = '✓ Username available';
+                        usernameHint.style.color = '#48BB78';
+                        usernameInput.style.borderColor = '#48BB78';
+                    }
+                } catch (err) {
+                    console.error('Username check error:', err);
+                }
+            }, 500);
+        });
+        
+        // ==========================================
+        // EMAIL VALIDATION
+        // ==========================================
+        const emailInput = document.getElementById('email');
+        const emailHint = document.getElementById('emailHint');
+        
+        emailInput.addEventListener('blur', async () => {
+            const email = emailInput.value.trim();
+            
+            if (!email) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('email')
+                    .eq('email', email)
+                    .single();
+                
+                if (data) {
+                    emailHint.textContent = '❌ Email already registered';
+                    emailHint.style.color = '#F56565';
+                    emailInput.style.borderColor = '#F56565';
+                } else if (error && error.code === 'PGRST116') {
+                    // No user found - email is available
+                    emailHint.textContent = '✓ Email available';
+                    emailHint.style.color = '#48BB78';
+                    emailInput.style.borderColor = '#48BB78';
+                }
+            } catch (err) {
+                console.error('Email check error:', err);
+            }
+        });
         
         // ==========================================
         // SIGN UP LOGIC
@@ -201,7 +296,24 @@
             // Clear previous errors
             errorMessage.style.display = 'none';
             
-            // Validation
+            // ==========================================
+            // VALIDATION
+            // ==========================================
+            
+            // Username format validation
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                errorMessage.textContent = 'Username can only contain letters, numbers, and underscores';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            if (username.length < 3 || username.length > 50) {
+                errorMessage.textContent = 'Username must be between 3 and 50 characters';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Password validation
             if (password !== confirmPassword) {
                 errorMessage.textContent = 'Passwords do not match';
                 errorMessage.style.display = 'block';
@@ -214,6 +326,7 @@
                 return;
             }
             
+            // Year group validation for students
             if (role === 'student' && !yearGroup) {
                 errorMessage.textContent = 'Please select your year group';
                 errorMessage.style.display = 'block';
@@ -225,10 +338,40 @@
             submitBtn.disabled = true;
             
             try {
-                console.log('Attempting sign up...');
+                console.log('Starting signup process...');
                 
-                // Sign up with Supabase
-                const { data, error } = await supabaseClient.auth.signUp({
+                // ==========================================
+                // CHECK USERNAME UNIQUENESS
+                // ==========================================
+                const { data: existingUsername, error: usernameCheckError } = await supabase
+                    .from('users')
+                    .select('username')
+                    .eq('username', username)
+                    .single();
+                
+                if (existingUsername) {
+                    throw new Error('Username already taken. Please choose another one.');
+                }
+                
+                // ==========================================
+                // CHECK EMAIL UNIQUENESS
+                // ==========================================
+                const { data: existingEmail, error: emailCheckError } = await supabase
+                    .from('users')
+                    .select('email')
+                    .eq('email', email)
+                    .single();
+                
+                if (existingEmail) {
+                    throw new Error('Email already registered. Please use another email or try logging in.');
+                }
+                
+                console.log('Username and email are available');
+                
+                // ==========================================
+                // SIGN UP WITH SUPABASE AUTH
+                // ==========================================
+                const { data: authData, error: authError } = await supabase.auth.signUp({
                     email: email,
                     password: password,
                     options: {
@@ -240,21 +383,73 @@
                     }
                 });
                 
-                if (error) throw error;
+                if (authError) {
+                    console.error('Auth signup error:', authError);
+                    throw authError;
+                }
                 
-                console.log('Sign up successful! Profile created automatically by database trigger.');
+                console.log('Auth signup successful:', authData);
                 
-                // Show success message
-                alert('Account created successfully! Please check your email to verify your account.');
+                // ==========================================
+                // CREATE USER PROFILE IN DATABASE
+                // ==========================================
+                // The database trigger should create this automatically,
+                // but we'll do it manually to ensure it exists
+                const { data: profileData, error: profileError } = await supabase
+                    .from('users')
+                    .insert({
+                        id: authData.user.id,
+                        email: email,
+                        username: username,
+                        role: role,
+                        year_group: role === 'student' ? yearGroup : null,
+                        xp: 0,
+                        level: 1,
+                        brain_coins: 0,
+                        hint_tokens: 5
+                    })
+                    .select()
+                    .single();
+                
+                if (profileError && profileError.code !== '23505') {
+                    // Ignore duplicate key error (profile already created by trigger)
+                    console.warn('Profile creation warning:', profileError);
+                }
+                
+                console.log('Profile created successfully');
+                
+                // ==========================================
+                // SUCCESS
+                // ==========================================
+                alert('Account created successfully! Please check your email to verify your account before logging in.');
                 
                 // Redirect to login page
                 setTimeout(() => {
                     window.location.href = './login.html';
-                }, 1000);
+                }, 1500);
                 
             } catch (error) {
                 console.error('Sign up error:', error);
-                errorMessage.textContent = error.message || 'An error occurred during sign up';
+                
+                let errorMsg = error.message || 'An error occurred during sign up';
+                
+                // Handle specific error cases
+                if (error.message?.includes('already registered')) {
+                    errorMsg = 'This email is already registered. Please log in instead.';
+                } else if (error.message?.includes('already taken')) {
+                    errorMsg = 'This username is already taken. Please choose another one.';
+                } else if (error.message?.includes('Password')) {
+                    errorMsg = 'Password must be at least 8 characters long';
+                } else if (error.code === '23505') {
+                    // Unique constraint violation
+                    if (error.message?.includes('username')) {
+                        errorMsg = 'Username already taken';
+                    } else if (error.message?.includes('email')) {
+                        errorMsg = 'Email already registered';
+                    }
+                }
+                
+                errorMessage.textContent = errorMsg;
                 errorMessage.style.display = 'block';
             } finally {
                 submitBtn.classList.remove('btn-loading');
