@@ -99,90 +99,6 @@
     }
   }
 
-
-
-  // ======================
-  // UPDATE DASHBOARD UI
-  // ======================
-  function updateDashboardUI() {
-    if (!userProfile) {
-      console.warn('No user profile to display');
-      return;
-    }
-
-    console.log('Updating dashboard UI...');
-
-    // Update username
-    if (usernameEl) {
-      usernameEl.textContent = userProfile.username || 'Student';
-    }
-
-    // Update stats
-    if (userLevelEl) userLevelEl.textContent = userProfile.level || 1;
-    if (userXPEl) userXPEl.textContent = (userProfile.xp || 0).toLocaleString();
-    if (userCoinsEl) userCoinsEl.textContent = (userProfile.brain_coins || 0).toLocaleString();
-    if (userHintsEl) userHintsEl.textContent = userProfile.hint_tokens || 5;
-
-    updateLevelProgress();
-    animateDashboardStats();
-    
-    // Show teacher-specific content if user is a teacher
-    if (userProfile.role === 'teacher') {
-      showTeacherDashboard();
-    } else {
-      showStudentDashboard();
-    }
-  }
-  
-  // ======================
-  // TEACHER DASHBOARD
-  // ======================
-  function showTeacherDashboard() {
-    const quickActionsGrid = document.querySelector('.quick-actions');
-    if (!quickActionsGrid) return;
-    
-    // Add teacher-specific action cards
-    const teacherCard = document.createElement('a');
-    teacherCard.href = 'classroom/dashboard.html';
-    teacherCard.className = 'action-card teacher-only';
-    teacherCard.innerHTML = `
-      <div class="action-icon" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
-      </div>
-      <h3 class="action-title">My Classrooms</h3>
-      <p class="action-description">Manage your classes and students</p>
-    `;
-    
-    // Insert teacher card at the beginning
-    quickActionsGrid.insertBefore(teacherCard, quickActionsGrid.firstChild);
-    
-    // Update welcome message
-    const welcomeTitle = document.querySelector('.welcome-title');
-    if (welcomeTitle) {
-      welcomeTitle.innerHTML = `Welcome back, <span id="username">${userProfile.username}</span>! 👨‍🏫`;
-    }
-    
-    console.log('✅ Teacher dashboard loaded');
-  }
-  
-  // ======================
-  // STUDENT DASHBOARD
-  // ======================
-  function showStudentDashboard() {
-    // Remove any teacher-only elements that might exist
-    const teacherElements = document.querySelectorAll('.teacher-only');
-    teacherElements.forEach(el => el.remove());
-    
-    console.log('✅ Student dashboard loaded');
-  }
-  // ======================
-  // LOAD USER PROFILE
-  // ======================
   // ======================
   // LOAD USER PROFILE
   // ======================
@@ -336,7 +252,7 @@
       return;
     }
 
-    console.log('Updating dashboard UI...');
+    console.log('Updating dashboard UI for role:', userProfile.role);
 
     // Update username
     if (usernameEl) {
@@ -351,6 +267,105 @@
 
     updateLevelProgress();
     animateDashboardStats();
+    
+    // Show role-specific content
+    if (userProfile.role === 'teacher') {
+      console.log('User is a teacher, loading teacher dashboard');
+      showTeacherDashboard();
+    } else {
+      console.log('User is a student, loading student dashboard');
+      showStudentDashboard();
+    }
+  }
+  
+  // ======================
+  // TEACHER DASHBOARD
+  // ======================
+  function showTeacherDashboard() {
+    const quickActionsGrid = document.querySelector('.quick-actions');
+    if (!quickActionsGrid) {
+      console.warn('Quick actions grid not found');
+      return;
+    }
+    
+    console.log('Loading teacher dashboard for:', userProfile.username);
+    
+    // Add teacher-specific action cards
+    const teacherCard = document.createElement('a');
+    teacherCard.href = 'classroom/dashboard.html';
+    teacherCard.className = 'action-card teacher-only';
+    teacherCard.innerHTML = `
+      <div class="action-icon" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <h3 class="action-title">
+        My Classrooms
+        <span class="teacher-badge">Teacher</span>
+      </h3>
+      <p class="action-description">Manage your classes and students</p>
+    `;
+    
+    // Insert teacher card at the beginning
+    quickActionsGrid.insertBefore(teacherCard, quickActionsGrid.firstChild);
+    
+    // Add a second teacher-only card for assignments
+    const assignmentsCard = document.createElement('a');
+    assignmentsCard.href = 'classroom/assignments.html';
+    assignmentsCard.className = 'action-card teacher-only';
+    assignmentsCard.innerHTML = `
+      <div class="action-icon" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <h3 class="action-title">
+        Assignments
+        <span class="teacher-badge">Teacher</span>
+      </h3>
+      <p class="action-description">Create and track student assignments</p>
+    `;
+    
+    // Insert after the first teacher card
+    quickActionsGrid.insertBefore(assignmentsCard, quickActionsGrid.children[1]);
+    
+    // Update welcome message with teacher emoji
+    const welcomeTitle = document.querySelector('.welcome-title');
+    if (welcomeTitle) {
+      const usernameSpan = welcomeTitle.querySelector('#username');
+      if (usernameSpan) {
+        usernameSpan.textContent = userProfile.username;
+      }
+      // Change emoji to teacher
+      welcomeTitle.innerHTML = welcomeTitle.innerHTML.replace('👋', '👨‍🏫');
+    }
+    
+    // Add visual indicator
+    const welcomeSection = document.querySelector('.welcome-section');
+    if (welcomeSection) {
+      welcomeSection.style.borderTop = '4px solid #10B981';
+    }
+    
+    console.log('✅ Teacher dashboard loaded with', quickActionsGrid.querySelectorAll('.teacher-only').length, 'teacher cards');
+  }
+  
+  // ======================
+  // STUDENT DASHBOARD
+  // ======================
+  function showStudentDashboard() {
+    // Remove any teacher-only elements that might exist
+    const teacherElements = document.querySelectorAll('.teacher-only');
+    teacherElements.forEach(el => el.remove());
+    
+    console.log('✅ Student dashboard loaded');
   }
 
   // ======================
