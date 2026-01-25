@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo - BrainMapRevision</title>
+
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../assets/css/demo.css" />
+    <link rel="shortcut icon" href="../assets/images/shortcut-icon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <!-- Navigation (matches your internal pages style) -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo" onclick="window.location.href='../index.html'" style="cursor:pointer;">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"
+            />
+            <path
+              d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"
+            />
+          </svg>
+          <span class="logo-text">BrainMapRevision</span>
+        </div>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-menu" id="navMenu">
+          <a href="#try" class="nav-link">Try It</a>
+          <a href="#flashcards" class="nav-link">Flashcards</a>
+          <a href="#quiz" class="nav-link">Quiz</a>
+          <a href="#pastpaper" class="nav-link">Past Paper</a>
+          <a href="#board" class="nav-link">Mini Board</a>
+
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero demo-hero" id="try">
+      <div class="container">
+        <div class="hero-badge">
+          <svg class="sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+          </svg>
+          <span>2–3 minute interactive demo • no login</span>
+        </div>
+
+        <h1 class="hero-title">
+          See how revision feels<br />
+          <span class="gradient-text">before you sign up</span>
+        </h1>
+
+        <p class="hero-description">
+          Flip a few flashcards, take a mini quiz, try a past paper question, and build a tiny revision board.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#flashcards" class="btn btn-primary btn-large">
+            Start Demo
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+          <a href="../auth/signup.html" class="btn btn-secondary btn-large">Create Account</a>
+        </div>
+
+        <div class="demo-quickgrid">
+          <div class="demo-pill"><i class="fa-solid fa-layer-group"></i> Boards</div>
+          <div class="demo-pill"><i class="fa-solid fa-clone"></i> Flashcards</div>
+          <div class="demo-pill"><i class="fa-solid fa-circle-question"></i> Quizzes</div>
+          <div class="demo-pill"><i class="fa-solid fa-file-lines"></i> Past Papers</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flashcards -->
+    <section class="demo-section" id="flashcards">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Flashcards</h2>
+          <p class="section-description">Flip, check your recall, then move on.</p>
+        </div>
+
+        <div class="demo-card">
+          <div class="demo-card-top">
+            <div class="demo-meta">
+              <span class="demo-tag">GCSE Science</span>
+              <span class="demo-tag">Biology</span>
+              <span class="demo-tag" id="fcProgress">1 / 5</span>
+            </div>
+            <button class="btn btn-secondary demo-small" id="fcResetBtn">Reset</button>
+          </div>
+
+          <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Flashcard (click to flip)">
+            <div class="flashcard-inner" id="flashcardInner">
+              <div class="flashcard-face flashcard-front">
+                <div class="flashcard-label">Question</div>
+                <div class="flashcard-text" id="fcFrontText"></div>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <div class="flashcard-label">Answer</div>
+                <div class="flashcard-text" id="fcBackText"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-actions">
+            <button class="btn btn-secondary" id="fcPrevBtn"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+            <button class="btn btn-primary" id="fcFlipBtn"><i class="fa-solid fa-rotate"></i> Flip</button>
+            <button class="btn btn-secondary" id="fcNextBtn">Next <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section class="demo-section" id="quiz">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Mini Quiz</h2>
+          <p class="section-description">Instant feedback + score at the end.</p>
+        </div>
+
+        <div class="demo-card">
+          <div class="demo-card-top">
+            <div class="demo-meta">
+              <span class="demo-tag">Maths</span>
+              <span class="demo-tag">Algebra</span>
+              <span class="demo-tag" id="quizProgress">Q1 / 3</span>
+            </div>
+            <button class="btn btn-secondary demo-small" id="quizRestartBtn">Restart</button>
+          </div>
+
+          <div class="quiz-question" id="quizQuestion"></div>
+          <div class="quiz-options" id="quizOptions"></div>
+
+          <div class="quiz-feedback" id="quizFeedback" aria-live="polite"></div>
+
+          <div class="demo-actions">
+            <button class="btn btn-secondary" id="quizNextBtn" disabled>
+              Next <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Past paper -->
+    <section class="demo-section" id="pastpaper">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Past Paper Practice</h2>
+          <p class="section-description">A real-style question flow: attempt → mark scheme → tips.</p>
+        </div>
+
+        <div class="demo-card">
+          <div class="demo-card-top">
+            <div class="demo-meta">
+              <span class="demo-tag">AQA-style</span>
+              <span class="demo-tag">English</span>
+              <span class="demo-tag">4 marks</span>
+            </div>
+          </div>
+
+          <div class="pp-block">
+            <h3 class="pp-title">Question</h3>
+            <p class="pp-text" id="ppQuestion"></p>
+
+            <label class="pp-label" for="ppAnswer">Your answer (demo):</label>
+            <textarea class="pp-textarea" id="ppAnswer" rows="5" placeholder="Write 2–4 sentences..."></textarea>
+
+            <div class="demo-actions">
+              <button class="btn btn-primary" id="ppRevealBtn">
+                Reveal mark scheme
+              </button>
+              <button class="btn btn-secondary" id="ppClearBtn">
+                Clear
+              </button>
+            </div>
+
+            <div class="pp-reveal" id="ppReveal" hidden>
+              <div class="pp-grid">
+                <div class="pp-panel">
+                  <h4 class="pp-subtitle"><i class="fa-solid fa-check"></i> Mark scheme (summary)</h4>
+                  <ul class="pp-list" id="ppMarkscheme"></ul>
+                </div>
+                <div class="pp-panel">
+                  <h4 class="pp-subtitle"><i class="fa-solid fa-lightbulb"></i> Examiner tips</h4>
+                  <ul class="pp-list" id="ppTips"></ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="pp-hint">
+              <i class="fa-solid fa-shield-halved"></i>
+              Demo content is sample-only (no copyright past paper text).
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mini board -->
+    <section class="demo-section" id="board">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Mini Revision Board</h2>
+          <p class="section-description">Add a couple of cards to see the workflow.</p>
+        </div>
+
+        <div class="demo-board">
+          <div class="demo-card">
+            <h3 class="board-title">Add a card</h3>
+
+            <div class="board-form">
+              <div class="board-row">
+                <div class="board-field">
+                  <label for="boardSubject">Subject</label>
+                  <select id="boardSubject" class="board-input">
+                    <option>Science</option>
+                    <option>Maths</option>
+                    <option>English</option>
+                    <option>History</option>
+                    <option>Geography</option>
+                    <option>Computer Science</option>
+                  </select>
+                </div>
+
+                <div class="board-field">
+                  <label for="boardTopic">Topic</label>
+                  <input id="boardTopic" class="board-input" placeholder="e.g., Cells, Fractions, Poetry..." />
+                </div>
+              </div>
+
+              <div class="board-field">
+                <label for="boardNote">Card content</label>
+                <textarea id="boardNote" class="board-input" rows="4" placeholder="Key facts, steps, definitions..."></textarea>
+              </div>
+
+              <div class="demo-actions">
+                <button class="btn btn-primary" id="boardAddBtn"><i class="fa-solid fa-plus"></i> Add to board</button>
+                <button class="btn btn-secondary" id="boardClearBtn">Clear board</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-card">
+            <div class="board-head">
+              <h3 class="board-title">Your demo board</h3>
+              <div class="board-counter" id="boardCount">0 cards</div>
+            </div>
+
+            <div class="board-list" id="boardList"></div>
+
+            <div class="board-empty" id="boardEmpty">
+              Add your first card on the left 👈
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3 class="footer-title">BrainMapRevision</h3>
+            <p class="footer-text">
+              Demo page — designed to be fast, clickable, and self-contained.
+            </p>
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Next steps</h4>
+            <div class="footer-links">
+              <a href="../auth/signup.html" class="footer-link">Create account</a>
+              <a href="subjects.html" class="footer-link">Browse subjects</a>
+              <a href="../index.html" class="footer-link">Home</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 BrainMapRevision. Open source, free forever.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Global nav/theme behaviors -->
+    <script src="../script.js"></script>
+    <!-- Demo logic (sample data, interactions) -->
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>
