@@ -183,11 +183,31 @@
   // ======================
   // LOAD USER PROFILE
   // ======================
+  // ======================
+  // LOAD USER PROFILE
+  // ======================
   async function loadUserProfile(retryCount = 0) {
     if (!currentUser) return;
 
     try {
       showLoading(true);
+      
+      // Update study streak first
+      try {
+        const { data: streakData, error: streakError } = await supabaseClient
+          .rpc('update_study_streak', {
+            user_uuid: currentUser.id
+          });
+
+        if (!streakError && streakData && streakData.length > 0) {
+          const streak = streakData[0];
+          if (streak.bonus_awarded) {
+            showStreakBonus(streak.new_streak, streak.bonus_xp, streak.bonus_coins);
+          }
+        }
+      } catch (err) {
+        console.warn('Could not update streak:', err);
+      }
       
       const { data, error } = await supabaseClient
         .from('users')
@@ -223,6 +243,41 @@
       showError('Failed to load profile data. Please refresh the page.');
       showLoading(false);
     }
+  }
+
+  // ======================
+  // SHOW STREAK BONUS
+  // ======================
+  function showStreakBonus(streak, xp, coins) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+      z-index: 9999;
+      animation: slideIn 0.5s ease;
+      max-width: 300px;
+    `;
+
+    notification.innerHTML = `
+      <div style="font-size: 2rem; margin-bottom: 10px;">🔥</div>
+      <h3 style="font-size: 1.2rem; margin-bottom: 8px;">${streak}-Day Streak!</h3>
+      <p style="margin: 0; opacity: 0.9;">
+        Bonus: +${xp} XP, +${coins} Coins
+      </p>
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.5s ease';
+      setTimeout(() => notification.remove(), 500);
+    }, 4000);
   }
 
   // ======================
