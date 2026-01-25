@@ -1,7 +1,11 @@
 
+// Get configuration from environment (set by env-config.js)
+const SUPABASE_URL = window.__ENV__?.SUPABASE_URL || 'https://qqbyxydxxcuklakvjlfr.supabase.co';
+const SUPABASE_ANON_KEY = window.__ENV__?.SUPABASE_ANON_KEY || 'your-anon-key-here';
+
 const supabase = window.supabaseClient || window.supabase?.createClient(
-    'https://qqbyxydxxcuklakvjlfr.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw'
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
 );
 
 

@@ -1,245 +1,325 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - BrainMapRevision</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
-    <link rel="shortcut icon" href="../assets/images/shortcut-icon.png">
-</head>
-<body>
-
-
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
+    <link rel="shortcut icon" href="../assets/images/shortcut-icon.png" />
+  </head>
+  <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
-                    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
-                </svg>
-                <span class="logo-text">BrainMapRevision</span>
-            </div>
-
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
-            <div class="nav-menu" id="navMenu">
-                <a href="subjects.html" class="nav-link">Subjects</a>
-                <a href="progress.html" class="nav-link">Progress</a>
-                <a href="profile.html" class="nav-link">Profile</a>
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                </button>
-            </div>
+      <div class="nav-container">
+        <div class="nav-logo">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"
+            />
+            <path
+              d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"
+            />
+          </svg>
+          <span class="logo-text">BrainMapRevision</span>
         </div>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="nav-menu" id="navMenu">
+          <a href="subjects.html" class="nav-link">Subjects</a>
+          <a href="progress.html" class="nav-link">Progress</a>
+          <a href="profile.html" class="nav-link">Profile</a>
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle dark mode"
+          >
+            <svg
+              class="sun-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg
+              class="moon-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+        </div>
+      </div>
     </nav>
 
     <!-- Dashboard Content -->
     <div class="dashboard-container">
-        <div class="container">
-            <!-- Welcome Section -->
-            <div class="welcome-section">
-                <h1 class="welcome-title">Welcome back, <span id="username">Student</span>! 👋</h1>
-                <p class="section-description">Ready to continue your revision journey?</p>
+      <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+          <h1 class="welcome-title">
+            Welcome back, <span id="username">Student</span>! 👋
+          </h1>
+          <p class="section-description">
+            Ready to continue your revision journey?
+          </p>
 
-                <!-- User Stats -->
-                <div class="user-stats">
-                    <div class="stat-card">
-                        <div class="stat-value" id="userLevel">1</div>
-                        <div class="stat-label">Level</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="userXP">0</div>
-                        <div class="stat-label">Total XP</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="userCoins">0</div>
-                        <div class="stat-label">Brain Coins</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="userHints">5</div>
-                        <div class="stat-label">Hint Tokens</div>
-                    </div>
-                </div>
-
-                <!-- Level Progress Bar -->
-                <div class="level-progress">
-                    <div class="progress-label">
-                        <span>Level Progress</span>
-                        <span>0 / 100 XP</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar-fill" style="width: 0%"></div>
-                    </div>
-                </div>
+          <!-- User Stats -->
+          <div class="user-stats">
+            <div class="stat-card">
+              <div class="stat-value" id="userLevel">1</div>
+              <div class="stat-label">Level</div>
             </div>
-
-            <!-- Quick Actions -->
-            <div class="section-header">
-                <h2 class="section-title">Quick Actions</h2>
+            <div class="stat-card">
+              <div class="stat-value" id="userXP">0</div>
+              <div class="stat-label">Total XP</div>
             </div>
-
-            <div class="quick-actions">
-                <a href="subjects.html" class="action-card">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                        </svg>
-                    </div>
-                    <h3 class="action-title">Browse Subjects</h3>
-                    <p class="action-description">Explore all available subjects and topics</p>
-                </a>
-
-                <a href="quizzes.html" class="action-card">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <circle cx="12" cy="12" r="6"/>
-                            <circle cx="12" cy="12" r="2"/>
-                        </svg>
-                    </div>
-                    <h3 class="action-title">Take a Quiz</h3>
-                    <p class="action-description">Test your knowledge and earn XP</p>
-                </a>
-
-                <a href="past-papers.html" class="action-card">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10 9 9 9 8 9"/>
-                        </svg>
-                    </div>
-                    <h3 class="action-title">Past Papers</h3>
-                    <p class="action-description">Practice with real exam questions</p>
-                </a>
-
-                <a href="revision-boards.html" class="action-card">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                            <line x1="9" y1="3" x2="9" y2="21"/>
-                        </svg>
-                    </div>
-                    <h3 class="action-title">Revision Boards</h3>
-                    <p class="action-description">Create custom study materials</p>
-                </a>
-
-                <a href="flashcards.html" class="action-card">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                            <line x1="1" y1="10" x2="23" y2="10"/>
-                        </svg>
-                    </div>
-                    <h3 class="action-title">Flashcards</h3>
-                    <p class="action-description">Study with spaced repetition</p>
-                </a>
-
-                <a href="progress.html" class="action-card">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="20" x2="18" y2="10"/>
-                            <line x1="12" y1="20" x2="12" y2="4"/>
-                            <line x1="6" y1="20" x2="6" y2="14"/>
-                        </svg>
-                    </div>
-                    <h3 class="action-title">View Progress</h3>
-                    <p class="action-description">Track your learning journey</p>
-                </a>
+            <div class="stat-card">
+              <div class="stat-value" id="userCoins">0</div>
+              <div class="stat-label">Brain Coins</div>
             </div>
-
-            <!-- Logout Button -->
-            <div class="logout-section">
-                <button class="btn btn-secondary logout-btn" id="logoutBtn">
-                    <span>Log Out</span>
-                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                </button>
+            <div class="stat-card">
+              <div class="stat-value" id="userHints">5</div>
+              <div class="stat-label">Hint Tokens</div>
             </div>
+          </div>
+
+          <!-- Level Progress Bar -->
+          <div class="level-progress">
+            <div class="progress-label">
+              <span>Level Progress</span>
+              <span>0 / 100 XP</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" style="width: 0%"></div>
+            </div>
+          </div>
         </div>
+
+        <!-- Quick Actions -->
+        <div class="section-header">
+          <h2 class="section-title">Quick Actions</h2>
+        </div>
+
+        <div class="quick-actions">
+          <a href="subjects.html" class="action-card">
+            <div class="action-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
+            </div>
+            <h3 class="action-title">Browse Subjects</h3>
+            <p class="action-description">
+              Explore all available subjects and topics
+            </p>
+          </a>
+
+          <a href="quizzes.html" class="action-card">
+            <div class="action-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
+            <h3 class="action-title">Take a Quiz</h3>
+            <p class="action-description">Test your knowledge and earn XP</p>
+          </a>
+
+          <a href="past-papers.html" class="action-card">
+            <div class="action-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+            </div>
+            <h3 class="action-title">Past Papers</h3>
+            <p class="action-description">Practice with real exam questions</p>
+          </a>
+
+          <a href="revision-boards.html" class="action-card">
+            <div class="action-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="9" y1="3" x2="9" y2="21" />
+              </svg>
+            </div>
+            <h3 class="action-title">Revision Boards</h3>
+            <p class="action-description">Create custom study materials</p>
+          </a>
+
+          <a href="flashcards.html" class="action-card">
+            <div class="action-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+            </div>
+            <h3 class="action-title">Flashcards</h3>
+            <p class="action-description">Study with spaced repetition</p>
+          </a>
+
+          <a href="progress.html" class="action-card">
+            <div class="action-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+              </svg>
+            </div>
+            <h3 class="action-title">View Progress</h3>
+            <p class="action-description">Track your learning journey</p>
+          </a>
+        </div>
+
+        <!-- Logout Button -->
+        <div class="logout-section">
+          <button class="btn btn-secondary logout-btn" id="logoutBtn">
+            <span>Log Out</span>
+            <svg
+              class="btn-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
 
-
-    
-
-        <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3 class="footer-title">BrainMapRevision</h3>
-                    <p class="footer-text">An open-source revision platform empowering students to master all subjects effectively.</p>
-                </div>
-                <div class="footer-section">
-                    <h4 class="footer-heading">Quick Links</h4>
-                    <a href="dashboard.html" class="footer-link">Dashboard</a>
-                    <a href="subjects.html" class="footer-link">Subjects</a>
-                    <a href="past-papers.html" class="footer-link">Past Papers</a>
-                </div>
-                <div class="footer-section">
-                    <h4 class="footer-heading">Resources</h4>
-                    <a href="quizzes.html" class="footer-link">Quizzes</a>
-                    <a href="flashcards.html" class="footer-link">Flashcards</a>
-                    <a href="revision-boards.html" class="footer-link">Revision Boards</a>
-                </div>
-                <div class="footer-section">
-                    <h4 class="footer-heading">Legal</h4>
-                    <a href="../legal/license.html" class="footer-link">MIT License</a>
-                    <a href="../legal/privacy.html" class="footer-link">Privacy Policy</a>
-                    <a href="../legal/terms.html" class="footer-link">Terms of Service</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 BrainMapRevision. Open source and free forever.</p>
-            </div>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3 class="footer-title">BrainMapRevision</h3>
+            <p class="footer-text">
+              An open-source revision platform empowering students to master all
+              subjects effectively.
+            </p>
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Quick Links</h4>
+            <a href="dashboard.html" class="footer-link">Dashboard</a>
+            <a href="subjects.html" class="footer-link">Subjects</a>
+            <a href="past-papers.html" class="footer-link">Past Papers</a>
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Resources</h4>
+            <a href="quizzes.html" class="footer-link">Quizzes</a>
+            <a href="flashcards.html" class="footer-link">Flashcards</a>
+            <a href="revision-boards.html" class="footer-link"
+              >Revision Boards</a
+            >
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Legal</h4>
+            <a href="../legal/license.html" class="footer-link">MIT License</a>
+            <a href="../legal/privacy.html" class="footer-link"
+              >Privacy Policy</a
+            >
+            <a href="../legal/terms.html" class="footer-link"
+              >Terms of Service</a
+            >
+          </div>
         </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 BrainMapRevision. Open source and free forever.</p>
+        </div>
+      </div>
     </footer>
 
     <!-- Load Supabase Library FIRST -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Load Environment Configuration FIRST -->
+    <script src="../assets/js/env-config.js"></script>
     
     <!-- THEN Initialize Supabase ONCE -->
     <script>
-        (function() {
-            const SUPABASE_URL = 'https://qqbyxydxxcuklakvjlfr.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw';
-            
-            if (!window.supabaseClient) {
-                window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log('✅ Supabase client initialized');
-            }
-        })();
+      (function () {
+        // Get configuration from environment (set by env-config.js)
+        const SUPABASE_URL = window.__ENV__?.SUPABASE_URL || "https://qqbyxydxxcuklakvjlfr.supabase.co";
+        const SUPABASE_ANON_KEY = window.__ENV__?.SUPABASE_ANON_KEY || "Your-anon-key-here";
+
+        if (!window.supabaseClient) {
+          window.supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+          );
+          console.log("✅ Supabase client initialized");
+        }
+      })();
     </script>
-    
+
     <!-- Load Global Scripts (theme toggle, mobile menu) -->
     <script src="../script.js"></script>
-    
+
     <!-- Load Dashboard-Specific JS LAST -->
     <script src="../assets/js/dashboard.js"></script>
-    
-</body>
+  </body>
 </html>

@@ -1,355 +1,433 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quizzes - BrainMapRevision</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../assets/css/quiz.css">
-    <link rel="shortcut icon" href="../assets/images/shortcut-icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-<body>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../assets/css/quiz.css" />
+    <link rel="shortcut icon" href="../assets/images/shortcut-icon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
-                    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
-                </svg>
-                <span class="logo-text">BrainMapRevision</span>
-            </div>
-
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
-            <div class="nav-menu" id="navMenu">
-                <a href="dashboard.html" class="nav-link">Dashboard</a>
-                <a href="subjects.html" class="nav-link">Subjects</a>
-                <a href="quizzes.html" class="nav-link active">Quizzes</a>
-                <a href="past-papers.html" class="nav-link">Past Papers</a>
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                </button>
-            </div>
+      <div class="nav-container">
+        <div class="nav-logo">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"
+            />
+            <path
+              d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"
+            />
+          </svg>
+          <span class="logo-text">BrainMapRevision</span>
         </div>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="nav-menu" id="navMenu">
+          <a href="dashboard.html" class="nav-link">Dashboard</a>
+          <a href="subjects.html" class="nav-link">Subjects</a>
+          <a href="quizzes.html" class="nav-link active">Quizzes</a>
+          <a href="past-papers.html" class="nav-link">Past Papers</a>
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle dark mode"
+          >
+            <svg
+              class="sun-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg
+              class="moon-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+        </div>
+      </div>
     </nav>
 
     <!-- Quizzes Page Content -->
     <div class="quizzes-container">
-        <div class="container">
-            <!-- Header -->
-            <div class="page-header">
-                <h1 class="page-title">Interactive <span class="gradient-text">Quizzes</span></h1>
-                <p class="page-description">Test your knowledge, earn XP, and master every topic</p>
-            </div>
-
-            <!-- Filters Section -->
-            <div class="filters-section">
-                <div class="filters-header">
-                    <h3><i class="fa-solid fa-filter"></i> Filter Quizzes</h3>
-                    <button class="btn btn-secondary btn-small" id="clearFiltersBtn">
-                        <i class="fa-solid fa-rotate-right"></i>
-                        Clear Filters
-                    </button>
-                </div>
-
-                <div class="filters-grid">
-                    <!-- Subject Filter -->
-                    <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fa-solid fa-book"></i>
-                            Subject
-                        </label>
-                        <select id="subjectFilter" class="filter-select">
-                            <option value="">All Subjects</option>
-                            <!-- Populated dynamically -->
-                        </select>
-                    </div>
-
-                    <!-- Topic Filter -->
-                    <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fa-solid fa-tag"></i>
-                            Topic
-                        </label>
-                        <select id="topicFilter" class="filter-select">
-                            <option value="">All Topics</option>
-                            <!-- Populated dynamically -->
-                        </select>
-                    </div>
-
-                    <!-- Difficulty Filter -->
-                    <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fa-solid fa-signal"></i>
-                            Difficulty
-                        </label>
-                        <select id="difficultyFilter" class="filter-select">
-                            <option value="">All Levels</option>
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
-                    </div>
-
-                    <!-- Question Count -->
-                    <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fa-solid fa-list-ol"></i>
-                            Questions
-                        </label>
-                        <select id="questionCountFilter" class="filter-select">
-                            <option value="5">5 Questions</option>
-                            <option value="10" selected>10 Questions</option>
-                            <option value="15">15 Questions</option>
-                            <option value="20">20 Questions</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Quick Start Options -->
-                <div class="quick-start-section">
-                    <h4>Quick Start</h4>
-                    <div class="quick-start-buttons">
-                        <button class="quick-start-btn" data-subject="mathematics">
-                            <i class="fa-solid fa-calculator"></i>
-                            Maths Quiz
-                        </button>
-                        <button class="quick-start-btn" data-subject="english">
-                            <i class="fa-solid fa-book"></i>
-                            English Quiz
-                        </button>
-                        <button class="quick-start-btn" data-subject="science">
-                            <i class="fa-solid fa-flask"></i>
-                            Science Quiz
-                        </button>
-                        <button class="quick-start-btn" id="randomQuizBtn">
-                            <i class="fa-solid fa-shuffle"></i>
-                            Random Quiz
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Loading State -->
-            <div id="loadingState" class="loading-state">
-                <div class="loading-spinner"></div>
-                <p>Loading quizzes...</p>
-            </div>
-
-            <!-- Error State -->
-            <div id="errorState" class="error-state" style="display: none;">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <h3>Unable to load quizzes</h3>
-                <p>Please check your connection and try again</p>
-                <button class="btn btn-primary" onclick="loadQuizzes()">Retry</button>
-            </div>
-
-            <!-- Available Quizzes Grid -->
-            <div id="quizzesListSection" style="display: none;">
-                <div class="results-info">
-                    <p id="resultsCount">Loading quizzes...</p>
-                </div>
-
-                <div class="quizzes-grid" id="quizzesGrid">
-                    <!-- Quizzes loaded dynamically -->
-                </div>
-            </div>
-
-            <!-- Quiz Taking Interface (Hidden initially) -->
-            <div id="quizInterface" class="quiz-interface" style="display: none;">
-                <!-- Quiz Header -->
-                <div class="quiz-header">
-                    <div class="quiz-info">
-                        <h2 id="quizTitle">Quiz Title</h2>
-                        <div class="quiz-meta">
-                            <span id="quizSubject">Subject</span>
-                            <span>•</span>
-                            <span id="quizTopic">Topic</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-secondary btn-small" id="exitQuizBtn">
-                        <i class="fa-solid fa-xmark"></i>
-                        Exit Quiz
-                    </button>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="quiz-progress">
-                    <div class="progress-text">
-                        <span>Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></span>
-                        <span id="timerDisplay" style="display: none;">
-                            <i class="fa-solid fa-clock"></i>
-                            <span id="timeRemaining">0:00</span>
-                        </span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar-fill" id="quizProgressBar"></div>
-                    </div>
-                </div>
-
-                <!-- Question Card -->
-                <div class="question-card" id="questionCard">
-                    <div class="question-text" id="questionText">
-                        <!-- Question loaded here -->
-                    </div>
-
-                    <div class="question-options" id="questionOptions">
-                        <!-- Options loaded here -->
-                    </div>
-
-                    <!-- Hint Section -->
-                    <div class="hint-section" id="hintSection" style="display: none;">
-                        <div class="hint-content">
-                            <i class="fa-solid fa-lightbulb"></i>
-                            <p id="hintText"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quiz Actions -->
-                <div class="quiz-actions">
-                    <button class="btn btn-outline" id="useHintBtn">
-                        <i class="fa-solid fa-lightbulb"></i>
-                        Use Hint (1 token)
-                    </button>
-                    <button class="btn btn-primary" id="submitAnswerBtn" disabled>
-                        Submit Answer
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Results Screen (Hidden initially) -->
-            <div id="resultsScreen" class="results-screen" style="display: none;">
-                <div class="results-card">
-                    <div class="results-header">
-                        <i class="fa-solid fa-trophy"></i>
-                        <h2>Quiz Complete!</h2>
-                    </div>
-
-                    <div class="results-score">
-                        <div class="score-circle">
-                            <svg class="score-ring" width="200" height="200">
-                                <circle cx="100" cy="100" r="90" fill="none" stroke="var(--border-color)" stroke-width="10"/>
-                                <circle id="scoreRingFill" cx="100" cy="100" r="90" fill="none" stroke="url(#gradient)" stroke-width="10" stroke-linecap="round" transform="rotate(-90 100 100)"/>
-                                <defs>
-                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" style="stop-color:#A78BFA"/>
-                                        <stop offset="100%" style="stop-color:#EC4899"/>
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                            <div class="score-text">
-                                <div class="score-percentage" id="scorePercentage">0%</div>
-                                <div class="score-fraction" id="scoreFraction">0/10</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="results-stats">
-                        <div class="result-stat">
-                            <i class="fa-solid fa-star"></i>
-                            <div>
-                                <div class="stat-value" id="xpEarned">+0 XP</div>
-                                <div class="stat-label">Experience Earned</div>
-                            </div>
-                        </div>
-                        <div class="result-stat">
-                            <i class="fa-solid fa-coins"></i>
-                            <div>
-                                <div class="stat-value" id="coinsEarned">+0 Coins</div>
-                                <div class="stat-label">Brain Coins</div>
-                            </div>
-                        </div>
-                        <div class="result-stat">
-                            <i class="fa-solid fa-lightbulb"></i>
-                            <div>
-                                <div class="stat-value" id="hintsUsed">0 Used</div>
-                                <div class="stat-label">Hints</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="results-actions">
-                        <button class="btn btn-secondary" id="reviewAnswersBtn">
-                            <i class="fa-solid fa-eye"></i>
-                            Review Answers
-                        </button>
-                        <button class="btn btn-primary" id="retakeQuizBtn">
-                            <i class="fa-solid fa-rotate-right"></i>
-                            Take Another Quiz
-                        </button>
-                    </div>
-                </div>
-            </div>
+      <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+          <h1 class="page-title">
+            Interactive <span class="gradient-text">Quizzes</span>
+          </h1>
+          <p class="page-description">
+            Test your knowledge, earn XP, and master every topic
+          </p>
         </div>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+          <div class="filters-header">
+            <h3><i class="fa-solid fa-filter"></i> Filter Quizzes</h3>
+            <button class="btn btn-secondary btn-small" id="clearFiltersBtn">
+              <i class="fa-solid fa-rotate-right"></i>
+              Clear Filters
+            </button>
+          </div>
+
+          <div class="filters-grid">
+            <!-- Subject Filter -->
+            <div class="filter-group">
+              <label class="filter-label">
+                <i class="fa-solid fa-book"></i>
+                Subject
+              </label>
+              <select id="subjectFilter" class="filter-select">
+                <option value="">All Subjects</option>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+
+            <!-- Topic Filter -->
+            <div class="filter-group">
+              <label class="filter-label">
+                <i class="fa-solid fa-tag"></i>
+                Topic
+              </label>
+              <select id="topicFilter" class="filter-select">
+                <option value="">All Topics</option>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+
+            <!-- Difficulty Filter -->
+            <div class="filter-group">
+              <label class="filter-label">
+                <i class="fa-solid fa-signal"></i>
+                Difficulty
+              </label>
+              <select id="difficultyFilter" class="filter-select">
+                <option value="">All Levels</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+
+            <!-- Question Count -->
+            <div class="filter-group">
+              <label class="filter-label">
+                <i class="fa-solid fa-list-ol"></i>
+                Questions
+              </label>
+              <select id="questionCountFilter" class="filter-select">
+                <option value="5">5 Questions</option>
+                <option value="10" selected>10 Questions</option>
+                <option value="15">15 Questions</option>
+                <option value="20">20 Questions</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick Start Options -->
+          <div class="quick-start-section">
+            <h4>Quick Start</h4>
+            <div class="quick-start-buttons">
+              <button class="quick-start-btn" data-subject="mathematics">
+                <i class="fa-solid fa-calculator"></i>
+                Maths Quiz
+              </button>
+              <button class="quick-start-btn" data-subject="english">
+                <i class="fa-solid fa-book"></i>
+                English Quiz
+              </button>
+              <button class="quick-start-btn" data-subject="science">
+                <i class="fa-solid fa-flask"></i>
+                Science Quiz
+              </button>
+              <button class="quick-start-btn" id="randomQuizBtn">
+                <i class="fa-solid fa-shuffle"></i>
+                Random Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Loading quizzes...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <h3>Unable to load quizzes</h3>
+          <p>Please check your connection and try again</p>
+          <button class="btn btn-primary" onclick="loadQuizzes()">Retry</button>
+        </div>
+
+        <!-- Available Quizzes Grid -->
+        <div id="quizzesListSection" style="display: none">
+          <div class="results-info">
+            <p id="resultsCount">Loading quizzes...</p>
+          </div>
+
+          <div class="quizzes-grid" id="quizzesGrid">
+            <!-- Quizzes loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- Quiz Taking Interface (Hidden initially) -->
+        <div id="quizInterface" class="quiz-interface" style="display: none">
+          <!-- Quiz Header -->
+          <div class="quiz-header">
+            <div class="quiz-info">
+              <h2 id="quizTitle">Quiz Title</h2>
+              <div class="quiz-meta">
+                <span id="quizSubject">Subject</span>
+                <span>•</span>
+                <span id="quizTopic">Topic</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-small" id="exitQuizBtn">
+              <i class="fa-solid fa-xmark"></i>
+              Exit Quiz
+            </button>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="quiz-progress">
+            <div class="progress-text">
+              <span
+                >Question <span id="currentQuestion">1</span> of
+                <span id="totalQuestions">10</span></span
+              >
+              <span id="timerDisplay" style="display: none">
+                <i class="fa-solid fa-clock"></i>
+                <span id="timeRemaining">0:00</span>
+              </span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="quizProgressBar"></div>
+            </div>
+          </div>
+
+          <!-- Question Card -->
+          <div class="question-card" id="questionCard">
+            <div class="question-text" id="questionText">
+              <!-- Question loaded here -->
+            </div>
+
+            <div class="question-options" id="questionOptions">
+              <!-- Options loaded here -->
+            </div>
+
+            <!-- Hint Section -->
+            <div class="hint-section" id="hintSection" style="display: none">
+              <div class="hint-content">
+                <i class="fa-solid fa-lightbulb"></i>
+                <p id="hintText"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quiz Actions -->
+          <div class="quiz-actions">
+            <button class="btn btn-outline" id="useHintBtn">
+              <i class="fa-solid fa-lightbulb"></i>
+              Use Hint (1 token)
+            </button>
+            <button class="btn btn-primary" id="submitAnswerBtn" disabled>
+              Submit Answer
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Screen (Hidden initially) -->
+        <div id="resultsScreen" class="results-screen" style="display: none">
+          <div class="results-card">
+            <div class="results-header">
+              <i class="fa-solid fa-trophy"></i>
+              <h2>Quiz Complete!</h2>
+            </div>
+
+            <div class="results-score">
+              <div class="score-circle">
+                <svg class="score-ring" width="200" height="200">
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="90"
+                    fill="none"
+                    stroke="var(--border-color)"
+                    stroke-width="10"
+                  />
+                  <circle
+                    id="scoreRingFill"
+                    cx="100"
+                    cy="100"
+                    r="90"
+                    fill="none"
+                    stroke="url(#gradient)"
+                    stroke-width="10"
+                    stroke-linecap="round"
+                    transform="rotate(-90 100 100)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="gradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="0%"
+                    >
+                      <stop offset="0%" style="stop-color: #a78bfa" />
+                      <stop offset="100%" style="stop-color: #ec4899" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="score-text">
+                  <div class="score-percentage" id="scorePercentage">0%</div>
+                  <div class="score-fraction" id="scoreFraction">0/10</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="results-stats">
+              <div class="result-stat">
+                <i class="fa-solid fa-star"></i>
+                <div>
+                  <div class="stat-value" id="xpEarned">+0 XP</div>
+                  <div class="stat-label">Experience Earned</div>
+                </div>
+              </div>
+              <div class="result-stat">
+                <i class="fa-solid fa-coins"></i>
+                <div>
+                  <div class="stat-value" id="coinsEarned">+0 Coins</div>
+                  <div class="stat-label">Brain Coins</div>
+                </div>
+              </div>
+              <div class="result-stat">
+                <i class="fa-solid fa-lightbulb"></i>
+                <div>
+                  <div class="stat-value" id="hintsUsed">0 Used</div>
+                  <div class="stat-label">Hints</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="results-actions">
+              <button class="btn btn-secondary" id="reviewAnswersBtn">
+                <i class="fa-solid fa-eye"></i>
+                Review Answers
+              </button>
+              <button class="btn btn-primary" id="retakeQuizBtn">
+                <i class="fa-solid fa-rotate-right"></i>
+                Take Another Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3 class="footer-title">BrainMapRevision</h3>
-                    <p class="footer-text">An open-source revision platform empowering students to master all subjects effectively.</p>
-                </div>
-                <div class="footer-section">
-                    <h4 class="footer-heading">Quick Links</h4>
-                    <a href="dashboard.html" class="footer-link">Dashboard</a>
-                    <a href="subjects.html" class="footer-link">Subjects</a>
-                    <a href="past-papers.html" class="footer-link">Past Papers</a>
-                </div>
-                <div class="footer-section">
-                    <h4 class="footer-heading">Resources</h4>
-                    <a href="quizzes.html" class="footer-link">Quizzes</a>
-                    <a href="flashcards.html" class="footer-link">Flashcards</a>
-                    <a href="revision-boards.html" class="footer-link">Revision Boards</a>
-                </div>
-                <div class="footer-section">
-                    <h4 class="footer-heading">Legal</h4>
-                    <a href="../legal/license.html" class="footer-link">MIT License</a>
-                    <a href="../legal/privacy.html" class="footer-link">Privacy Policy</a>
-                    <a href="../legal/terms.html" class="footer-link">Terms of Service</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 BrainMapRevision. Open source and free forever.</p>
-            </div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3 class="footer-title">BrainMapRevision</h3>
+            <p class="footer-text">
+              An open-source revision platform empowering students to master all
+              subjects effectively.
+            </p>
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Quick Links</h4>
+            <a href="dashboard.html" class="footer-link">Dashboard</a>
+            <a href="subjects.html" class="footer-link">Subjects</a>
+            <a href="past-papers.html" class="footer-link">Past Papers</a>
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Resources</h4>
+            <a href="quizzes.html" class="footer-link">Quizzes</a>
+            <a href="flashcards.html" class="footer-link">Flashcards</a>
+            <a href="revision-boards.html" class="footer-link"
+              >Revision Boards</a
+            >
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Legal</h4>
+            <a href="../legal/license.html" class="footer-link">MIT License</a>
+            <a href="../legal/privacy.html" class="footer-link"
+              >Privacy Policy</a
+            >
+            <a href="../legal/terms.html" class="footer-link"
+              >Terms of Service</a
+            >
+          </div>
         </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 BrainMapRevision. Open source and free forever.</p>
+        </div>
+      </div>
     </footer>
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+
     <!-- Initialize Supabase -->
+    <!-- Load Environment Configuration FIRST -->
+    <script src="../assets/js/env-config.js"></script>
+    
     <script>
-        (function() {
-            const SUPABASE_URL = 'https://qqbyxydxxcuklakvjlfr.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYnl4eWR4eGN1a2xha3ZqbGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2MTYsImV4cCI6MjA4NDYwNDYxNn0.2I-uy7ghGa6Ou7uuzDfpYbd75qrNivlBEQBthilYHxw';
-            
-            if (!window.supabaseClient) {
-                window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        })();
+      (function () {
+        // Get configuration from environment (set by env-config.js)
+        const SUPABASE_URL = window.__ENV__?.SUPABASE_URL || "https://qqbyxydxxcuklakvjlfr.supabase.co";
+        const SUPABASE_ANON_KEY = window.__ENV__?.SUPABASE_ANON_KEY || "Your-anon-key-here";
+
+        if (!window.supabaseClient) {
+          window.supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+          );
+        }
+      })();
     </script>
 
     <!-- Auth Check -->
@@ -357,8 +435,8 @@
 
     <!-- Global Scripts -->
     <script src="../script.js"></script>
-    
+
     <!-- Quiz Engine -->
     <script src="../assets/js/quiz-engine.js"></script>
-</body>
+  </body>
 </html>

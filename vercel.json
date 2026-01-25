@@ -1,0 +1,6 @@
+{
+  "buildCommand": "node scripts/build-env.js",
+  "outputDirectory": ".",
+  "framework": null,
+  "installCommand": "echo 'No dependencies to install'"
+}

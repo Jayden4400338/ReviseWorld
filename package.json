@@ -1,0 +1,12 @@
+{
+  "name": "brainmaprevision-web",
+  "version": "1.0.0",
+  "description": "BrainMapRevision web application",
+  "scripts": {
+    "setup:local": "node scripts/setup-local-env.js",
+    "build": "node scripts/build-env.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
