@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classroom View - BrainMapRevision</title>
+    <link rel="stylesheet" href="../../style.css" />
+    <link rel="stylesheet" href="../../assets/css/dashboard.css" />
+    <link rel="stylesheet" href="../../assets/css/classroom.css" />
+    <link rel="shortcut icon" href="../../assets/images/shortcut-icon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="dashboard.html" class="nav-logo-link" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+          <div class="nav-logo">
+            <svg
+              class="logo-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"
+              />
+              <path
+                d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"
+              />
+            </svg>
+            <span class="logo-text">BrainMapRevision</span>
+          </div>
+        </a>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="nav-menu" id="navMenu">
+          <a href="../dashboard.html" class="nav-link">Main</a>
+          <a href="dashboard.html" class="nav-link">Classrooms</a>
+          <a href="join.html" class="nav-link">Join</a>
+          <div class="nav-profile" id="navProfile">
+            <!-- Profile picture will be inserted here by script.js -->
+          </div>
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle dark mode"
+          >
+            <svg
+              class="sun-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg
+              class="moon-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Classroom View Content -->
+    <div class="dashboard-container">
+      <div class="container">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state" style="text-align: center; padding: 60px 20px;">
+          <div class="loading-spinner"></div>
+          <p>Loading classroom...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="empty-state" style="display: none;">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h3>Error Loading Classroom</h3>
+          <p id="errorMessage">Unable to load classroom details.</p>
+          <a href="dashboard.html" class="btn btn-primary">Back to Classrooms</a>
+        </div>
+
+        <!-- Classroom Content (hidden until loaded) -->
+        <div id="classroomContent" style="display: none;">
+          <!-- Classroom Header -->
+          <div class="classroom-view-header">
+            <div class="classroom-view-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="classroom-view-info">
+              <h1 class="classroom-view-name" id="classroomName">Loading...</h1>
+              <div class="classroom-view-meta" id="classroomMeta">
+                <span id="classroomSubject">-</span>
+                <span class="classroom-separator">•</span>
+                <span id="classroomYear">-</span>
+              </div>
+            </div>
+            <div class="classroom-view-actions" id="teacherActions" style="display: none;">
+              <a href="students.html?classroom=" id="studentsLink" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px;">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                </svg>
+                Students
+              </a>
+              <a href="assignments.html?classroom=" id="assignmentsLink" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px;">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                Assignments
+              </a>
+            </div>
+          </div>
+
+          <!-- Teacher Section: Invite Code -->
+          <div id="teacherSection" class="classroom-section" style="display: none;">
+            <div class="section-header">
+              <h2 class="section-title">Invite Students</h2>
+            </div>
+            <div class="invite-code-display">
+              <div class="invite-code-large-display">
+                <label style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px; display: block;">Invite Code:</label>
+                <div class="invite-code-big" id="inviteCodeBig"></div>
+                <div class="invite-code-actions">
+                  <button class="btn btn-secondary" onclick="copyInviteCodeFromView()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px;">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Copy Code
+                  </button>
+                  <button class="btn btn-primary" onclick="showFullscreenInviteFromView()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px;">
+                      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                    </svg>
+                    Show Fullscreen
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Statistics Section -->
+          <div class="classroom-section">
+            <div class="section-header">
+              <h2 class="section-title">Statistics</h2>
+            </div>
+            <div class="user-stats">
+              <div class="stat-card">
+                <div class="stat-value" id="totalStudents">-</div>
+                <div class="stat-label">Total Students</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="totalAssignments">-</div>
+                <div class="stat-label">Total Assignments</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="activeAssignments">-</div>
+                <div class="stat-label">Active Assignments</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="completedSubmissions">-</div>
+                <div class="stat-label">Completed</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assignments Section -->
+          <div class="classroom-section">
+            <div class="section-header">
+              <h2 class="section-title">Assignments</h2>
+              <div id="teacherAssignmentsActions" style="display: none;">
+                <a href="assignments.html?classroom=" id="createAssignmentLink" class="btn btn-primary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px;">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Create Assignment
+                </a>
+              </div>
+            </div>
+            <div id="assignmentsList" class="assignments-list">
+              <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading assignments...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Students Section (Teacher Only) -->
+          <div id="studentsSection" class="classroom-section" style="display: none;">
+            <div class="section-header">
+              <h2 class="section-title">Students</h2>
+              <a href="students.html?classroom=" id="viewAllStudentsLink" class="btn btn-secondary">
+                View All Students
+              </a>
+            </div>
+            <div id="studentsList" class="students-list">
+              <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading students...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen Invite Code Modal -->
+    <div id="fullscreenInviteModal" class="fullscreen-modal" style="display: none;">
+      <div class="fullscreen-content">
+        <button class="fullscreen-close" onclick="closeFullscreenInvite()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <div class="fullscreen-invite-code">
+          <h2 style="margin-bottom: 20px; color: var(--text-primary);">Classroom Invite Code</h2>
+          <div class="invite-code-large" id="fullscreenInviteCodeText"></div>
+          <p style="margin-top: 30px; color: var(--text-secondary); font-size: 1.1rem;">
+            Students can join using this code at:<br>
+            <code style="background: rgba(0,0,0,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">your-site.com/classroom/join.html</code>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3 class="footer-title">BrainMapRevision</h3>
+            <p class="footer-text">
+              An open-source revision platform empowering students to master all
+              subjects effectively.
+            </p>
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Quick Links</h4>
+            <a href="../dashboard.html" class="footer-link">Dashboard</a>
+            <a href="dashboard.html" class="footer-link">Classrooms</a>
+            <a href="join.html" class="footer-link">Join Classroom</a>
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Resources</h4>
+            <a href="../subjects.html" class="footer-link">Subjects</a>
+            <a href="../past-papers.html" class="footer-link">Past Papers</a>
+            <a href="../quizzes.html" class="footer-link">Quizzes</a>
+          </div>
+          <div class="footer-section">
+            <h4 class="footer-heading">Legal</h4>
+            <a href="../../legal/license.html" class="footer-link">MIT License</a>
+            <a href="../../legal/privacy.html" class="footer-link">Privacy Policy</a>
+            <a href="../../legal/terms.html" class="footer-link">Terms of Service</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 BrainMapRevision. Open source and free forever.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Load Supabase Library FIRST -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Load Environment Configuration FIRST -->
+    <script src="../../assets/js/env-config.js"></script>
+    
+    <!-- THEN Initialize Supabase ONCE -->
+    <script>
+      (function () {
+        const SUPABASE_URL = window.__ENV__?.SUPABASE_URL || "https://qqbyxydxxcuklakvjlfr.supabase.co";
+        const SUPABASE_ANON_KEY = window.__ENV__?.SUPABASE_ANON_KEY || "Your-anon-key-here";
+
+        if (!window.supabaseClient) {
+          window.supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+          );
+          console.log("✅ Supabase client initialized");
+        }
+      })();
+    </script>
+
+    <!-- Load Global Scripts (theme toggle, mobile menu) -->
+    <script src="../../script.js"></script>
+
+    <!-- Load Auth Check -->
+    <script src="../../assets/js/auth-check.js"></script>
+
+    <!-- Load Classroom View JS -->
+    <script src="../../assets/js/classroom-view.js"></script>
+  </body>
+</html>

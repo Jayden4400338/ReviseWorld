@@ -402,6 +402,39 @@ async function updatePassword(newPassword) {
     }
 }
 
+/**
+ * Resend verification email
+ * @param {string} email - User email address
+ * @returns {Promise<Object>} - {success: boolean, error: string}
+ */
+async function resendVerificationEmail(email) {
+    try {
+        if (!email) {
+            throw new Error('Email is required');
+        }
+
+        // Use resendConfirmation to resend verification email
+        const { error } = await supabase.auth.resend({
+            type: 'signup',
+            email: email,
+            options: {
+                emailRedirectTo: window.location.origin + '/auth/login.html'
+            }
+        });
+        
+        if (error) throw error;
+        
+        return { success: true };
+        
+    } catch (error) {
+        console.error('Resend verification email error:', error);
+        return {
+            success: false,
+            error: error.message || 'Failed to resend verification email'
+        };
+    }
+}
+
 
 
 if (typeof window !== 'undefined') {
@@ -413,6 +446,7 @@ if (typeof window !== 'undefined') {
         getUserProfile,
         isAuthenticated,
         resetPassword,
+        resendVerificationEmail,
         updatePassword,
         validateUsernameFormat,
         validateEmailFormat,

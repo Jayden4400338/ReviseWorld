@@ -149,6 +149,22 @@
             </svg>
           </button>
 
+          <!-- Resend Verification Section (hidden by default) -->
+          <div id="resendVerificationSection" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 8px;">
+            <p style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 0.9rem;">
+              Your email address hasn't been verified yet.
+            </p>
+            <button type="button" id="resendVerificationBtn" class="btn btn-secondary" style="width: 100%;">
+              <span>Resend Verification Email</span>
+            </button>
+            <p id="resendStatus" style="margin: 10px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);"></p>
+          </div>
+
+          <!-- Resend Verification Link -->
+          <p class="auth-footer" style="margin-top: 10px;">
+            <a href="resend-verification.html" class="auth-link">Resend verification email</a>
+          </p>
+
           <!-- Sign Up Link -->
           <p class="auth-footer">
             Don't have an account?
@@ -216,7 +232,27 @@
 
           if (error) {
             console.error("Login error:", error);
+            
+            // Check if user exists but email is not verified
+            if (error.message?.includes('Email not confirmed') || 
+                error.message?.includes('email_not_confirmed') ||
+                error.status === 400) {
+              
+              // Try to get user to check verification status
+              const { data: { user } } = await supabaseClient.auth.getUser();
+              
+              // Show resend verification option
+              showResendVerificationOption(email);
+              throw new Error('Please verify your email address. Check your inbox for the verification email, or click below to resend it.');
+            }
+            
             throw error;
+          }
+          
+          // Check if user is verified
+          if (data.user && !data.user.email_confirmed_at) {
+            showResendVerificationOption(email);
+            throw new Error('Please verify your email address before logging in. Check your inbox or click below to resend the verification email.');
           }
 
           console.log("Login successful!", data);
@@ -255,6 +291,71 @@
           submitBtn.disabled = false;
         }
       });
+
+      // ==========================================
+      // RESEND VERIFICATION EMAIL
+      // ==========================================
+      const resendVerificationSection = document.getElementById("resendVerificationSection");
+      const resendVerificationBtn = document.getElementById("resendVerificationBtn");
+      const resendStatus = document.getElementById("resendStatus");
+      let currentEmailForResend = "";
+
+      function showResendVerificationOption(email) {
+        currentEmailForResend = email;
+        if (resendVerificationSection) {
+          resendVerificationSection.style.display = "block";
+        }
+      }
+
+      if (resendVerificationBtn) {
+        resendVerificationBtn.addEventListener("click", async () => {
+          if (!currentEmailForResend) {
+            currentEmailForResend = document.getElementById("email").value.trim();
+          }
+
+          if (!currentEmailForResend) {
+            resendStatus.textContent = "Please enter your email address first.";
+            resendStatus.style.color = "#F56565";
+            return;
+          }
+
+          resendVerificationBtn.disabled = true;
+          resendVerificationBtn.innerHTML = '<span>Sending...</span>';
+          resendStatus.textContent = "";
+          resendStatus.style.color = "";
+
+          try {
+            console.log("Resending verification to:", currentEmailForResend);
+            const { data, error } = await supabaseClient.auth.resend({
+              type: 'signup',
+              email: currentEmailForResend,
+              options: {
+                emailRedirectTo: window.location.origin + '/auth/login.html'
+              }
+            });
+            
+            console.log("Resend response:", data);
+
+            if (error) throw error;
+
+            resendStatus.textContent = "Verification email sent! Please check your inbox.";
+            resendStatus.style.color = "#10B981";
+            resendVerificationBtn.innerHTML = '<span>Email Sent ✓</span>';
+            
+            setTimeout(() => {
+              resendVerificationBtn.disabled = false;
+              resendVerificationBtn.innerHTML = '<span>Resend Verification Email</span>';
+            }, 3000);
+
+          } catch (error) {
+            console.error("Resend verification error:", error);
+            resendStatus.textContent = error.message || "Failed to send verification email. Please try again.";
+            resendStatus.style.color = "#F56565";
+            resendVerificationBtn.disabled = false;
+            resendVerificationBtn.innerHTML = '<span>Resend Verification Email</span>';
+          }
+        });
+      }
 
       // ==========================================
       // CHECK IF ALREADY LOGGED IN

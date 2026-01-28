@@ -215,14 +215,30 @@ async function loadNavbarProfile() {
     if (profileError || !profile) {
       // Show placeholder with initials
       const initials = (user.email || 'U').substring(0, 2).toUpperCase();
-      navProfile.innerHTML = `<div class="nav-profile-placeholder" onclick="window.location.href='pages/profile.html'">${initials}</div>`;
+      const path = window.location.pathname;
+      let profilePath;
+      if (path.includes('/classroom/')) {
+        profilePath = '../profile.html';
+      } else if (path.includes('/pages/')) {
+        profilePath = 'profile.html';
+      } else {
+        profilePath = 'pages/profile.html';
+      }
+      navProfile.innerHTML = `<div class="nav-profile-placeholder" onclick="window.location.href='${profilePath}'">${initials}</div>`;
       return;
     }
 
     // Display profile picture or placeholder
     // Determine correct path based on current page location
-    const isInPages = window.location.pathname.includes('/pages/');
-    const profilePath = isInPages ? 'profile.html' : 'pages/profile.html';
+    const path = window.location.pathname;
+    let profilePath;
+    if (path.includes('/classroom/')) {
+      profilePath = '../profile.html';
+    } else if (path.includes('/pages/')) {
+      profilePath = 'profile.html';
+    } else {
+      profilePath = 'pages/profile.html';
+    }
     
     if (profile.profile_picture_url) {
       navProfile.innerHTML = `<img src="${profile.profile_picture_url}" alt="Profile" class="nav-profile-picture" onclick="window.location.href='${profilePath}'">`;

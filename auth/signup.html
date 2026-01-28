@@ -359,6 +359,50 @@
       // ==========================================
       // SIGN UP LOGIC
       // ==========================================
+      
+      // Handle unverified email - resend verification
+      async function handleUnverifiedEmail(email) {
+        try {
+          console.log("Attempting to resend verification to:", email);
+          const { data, error } = await supabaseClient.auth.resend({
+            type: 'signup',
+            email: email,
+            options: {
+              emailRedirectTo: window.location.origin + '/auth/login.html'
+            }
+          });
+          
+          console.log("Resend response:", data);
+
+          if (error) {
+            console.error("Resend verification error:", error);
+            return false;
+          }
+
+          // Show success message
+          const errorMessage = document.getElementById("errorMessage");
+          if (errorMessage) {
+            errorMessage.style.display = "block";
+            errorMessage.style.background = "rgba(16, 185, 129, 0.1)";
+            errorMessage.style.borderColor = "rgba(16, 185, 129, 0.3)";
+            errorMessage.style.color = "#10B981";
+            errorMessage.textContent = 
+              "This email is already registered but not verified. " +
+              "A new verification email has been sent to " + email + ". " +
+              "Please check your inbox and verify your email before logging in.";
+          }
+
+          setTimeout(() => {
+            window.location.href = "./login.html";
+          }, 5000);
+
+          return true;
+        } catch (err) {
+          console.error("Error handling unverified email:", err);
+          return false;
+        }
+      }
+      
       const signupForm = document.getElementById("signupForm");
       const roleInputs = document.querySelectorAll('input[name="role"]');
       const yearGroupSection = document.getElementById("yearGroupSection");
@@ -457,9 +501,10 @@
               .single();
 
           if (existingEmail) {
-            throw new Error(
-              "Email already registered. Please use another email or try logging in.",
-            );
+            // Check if the user exists in auth but is unverified
+            // We can't directly check this, but we can try to sign up
+            // and handle the error if email exists
+            console.warn("Email exists in users table, but may be unverified");
           }
 
           console.log("Username and email are available");
@@ -480,7 +525,25 @@
 
           if (authError) {
             console.error("Auth signup error:", authError);
+            
+            // If email already exists and is unverified, offer to resend
+            if (authError.message?.includes('already registered') || 
+                authError.message?.includes('User already registered')) {
+              
+              // Check if we can resend verification
+              const resendResult = await handleUnverifiedEmail(email);
+              if (resendResult) {
+                return; // Resend was successful, don't throw error
+              }
+            }
+            
             throw authError;
+          }
+          
+          // Check if user was created but email needs verification
+          if (authData.user && !authData.user.email_confirmed_at) {
+            console.log("User created but email not verified");
+            // The success message below will handle this
           }
 
           console.log("Auth signup successful:", authData);

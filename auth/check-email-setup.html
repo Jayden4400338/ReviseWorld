@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check Email Setup - BrainMapRevision</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../assets/css/auth.css" />
+    <link rel="shortcut icon" href="../assets/images/shortcut-icon.png" />
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-card" style="max-width: 700px;">
+        <div class="auth-header">
+          <h1 class="auth-title">Email Setup Diagnostic</h1>
+          <p class="auth-subtitle">
+            Check if your Supabase email verification is configured correctly
+          </p>
+        </div>
+
+        <div id="diagnosticResults" style="margin-top: 20px;">
+          <button id="runDiagnostics" class="btn btn-primary btn-full">
+            Run Diagnostics
+          </button>
+          
+          <div id="results" style="margin-top: 20px; display: none;">
+            <h3 style="margin-bottom: 15px;">Results:</h3>
+            <div id="resultsContent"></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: rgba(255, 193, 7, 0.1); border-radius: 8px;">
+          <h3 style="margin-bottom: 10px;">Required Supabase Settings:</h3>
+          <ol style="text-align: left; color: var(--text-secondary);">
+            <li>Go to <strong>Authentication → Settings</strong></li>
+            <li>Enable <strong>"Enable email confirmations"</strong></li>
+            <li>Set <strong>Site URL</strong> to your domain</li>
+            <li>Add redirect URLs to allowlist</li>
+            <li>Configure SMTP (or use built-in for testing)</li>
+            <li>Enable email templates</li>
+          </ol>
+          <p style="margin-top: 15px; font-size: 0.9rem;">
+            See <code>SUPABASE_EMAIL_SETUP.md</code> for detailed instructions.
+          </p>
+        </div>
+
+        <p class="auth-footer" style="margin-top: 30px;">
+          <a href="login.html" class="auth-link">Back to Login</a>
+        </p>
+      </div>
+    </div>
+
+    <script src="../assets/js/env-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const SUPABASE_URL = window.__ENV__?.SUPABASE_URL || "https://qqbyxydxxcuklakvjlfr.supabase.co";
+      const SUPABASE_ANON_KEY = window.__ENV__?.SUPABASE_ANON_KEY || "Your-anon-key-here";
+
+      if (!window.supabaseClient) {
+        window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+
+      const supabaseClient = window.supabaseClient;
+      const runDiagnostics = document.getElementById('runDiagnostics');
+      const results = document.getElementById('results');
+      const resultsContent = document.getElementById('resultsContent');
+
+      runDiagnostics.addEventListener('click', async () => {
+        runDiagnostics.disabled = true;
+        runDiagnostics.textContent = 'Running...';
+        resultsContent.innerHTML = '<p>Checking configuration...</p>';
+
+        const checks = [];
+
+        // Check 1: Supabase connection
+        try {
+          const { data, error } = await supabaseClient.auth.getSession();
+          checks.push({
+            name: 'Supabase Connection',
+            status: !error ? '✅ Connected' : '❌ Error: ' + error.message,
+            details: error ? error.message : 'Successfully connected to Supabase'
+          });
+        } catch (e) {
+          checks.push({
+            name: 'Supabase Connection',
+            status: '❌ Failed',
+            details: e.message
+          });
+        }
+
+        // Check 2: Try to resend (will fail if email confirmations disabled)
+        const testEmail = 'test@example.com';
+        try {
+          const { data, error } = await supabaseClient.auth.resend({
+            type: 'signup',
+            email: testEmail
+          });
+          
+          if (error) {
+            if (error.message?.includes('disabled') || error.message?.includes('confirmation')) {
+              checks.push({
+                name: 'Email Confirmations',
+                status: '⚠️ May be disabled',
+                details: 'Error suggests email confirmations might be disabled. Check Supabase Dashboard → Authentication → Settings'
+              });
+            } else if (error.message?.includes('not found')) {
+              checks.push({
+                name: 'Email Confirmations',
+                status: '✅ Enabled (test user not found, which is expected)',
+                details: 'API is working. Email confirmations appear to be enabled.'
+              });
+            } else {
+              checks.push({
+                name: 'Email Confirmations',
+                status: '⚠️ Check required',
+                details: 'Error: ' + error.message
+              });
+            }
+          } else {
+            checks.push({
+              name: 'Email Confirmations',
+              status: '✅ Enabled',
+              details: 'Resend API is working correctly'
+            });
+          }
+        } catch (e) {
+          checks.push({
+            name: 'Email Confirmations',
+            status: '❌ Error',
+            details: e.message
+          });
+        }
+
+        // Display results
+        results.style.display = 'block';
+        resultsContent.innerHTML = checks.map(check => `
+          <div style="margin-bottom: 15px; padding: 15px; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+            <strong>${check.name}</strong><br>
+            <span style="color: ${check.status.includes('✅') ? '#10B981' : check.status.includes('⚠️') ? '#F59E0B' : '#F56565'}">
+              ${check.status}
+            </span><br>
+            <small style="color: var(--text-secondary);">${check.details}</small>
+          </div>
+        `).join('');
+
+        runDiagnostics.disabled = false;
+        runDiagnostics.textContent = 'Run Diagnostics Again';
+      });
+    </script>
+    <script src="../script.js"></script>
+  </body>
+</html>

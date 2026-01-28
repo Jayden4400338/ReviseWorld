@@ -71,6 +71,15 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 70px;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.nav-logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
 }
 
 .nav-logo {
@@ -109,7 +118,15 @@ body {
 .nav-menu {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 20px;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.nav-link {
+    white-space: nowrap;
+    font-size: 0.95rem;
 }
 
 .nav-profile {
@@ -542,6 +559,16 @@ body:not(.dark-mode) .moon-icon {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .nav-menu {
+        gap: 15px;
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+    }
+}
+
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: flex;
@@ -557,6 +584,7 @@ body:not(.dark-mode) .moon-icon {
         padding: 20px;
         border-bottom: 1px solid var(--border-color);
         display: none;
+        gap: 15px;
     }
 
     .nav-menu.active {

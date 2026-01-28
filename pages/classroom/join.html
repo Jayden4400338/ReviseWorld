@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Classroom - BrainMapRevision</title>
+    <title>Join Classroom - BrainMapRevision</title>
     <link rel="stylesheet" href="../../style.css" />
     <link rel="stylesheet" href="../../assets/css/dashboard.css" />
     <link rel="stylesheet" href="../../assets/css/classroom.css" />
@@ -13,7 +13,7 @@
     <!-- Navigation -->
     <nav class="navbar">
       <div class="nav-container">
-        <a href="dashboard.html" class="nav-logo-link" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+        <a href="../dashboard.html" class="nav-logo-link" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
           <div class="nav-logo">
             <svg
               class="logo-icon"
@@ -40,10 +40,8 @@
         </button>
 
         <div class="nav-menu" id="navMenu">
-          <a href="../dashboard.html" class="nav-link">Main</a>
-          <a href="dashboard.html" class="nav-link">Classrooms</a>
-          <a href="create.html" class="nav-link">Create</a>
-          <a href="assignments.html" class="nav-link">Assignments</a>
+          <a href="../dashboard.html" class="nav-link">Dashboard</a>
+          <a href="join.html" class="nav-link">Join Classroom</a>
           <div class="nav-profile" id="navProfile">
             <!-- Profile picture will be inserted here by script.js -->
           </div>
@@ -83,72 +81,39 @@
       </div>
     </nav>
 
-    <!-- Create Classroom Content -->
+    <!-- Join Classroom Content -->
     <div class="dashboard-container">
-      <div class="container" style="max-width: 700px;">
+      <div class="container" style="max-width: 600px;">
         <!-- Header -->
         <div class="welcome-section">
           <h1 class="welcome-title">
-            Create New Classroom <span class="teacher-badge">Teacher</span>
+            Join a Classroom
           </h1>
           <p class="section-description">
-            Set up a new classroom for your students. You'll get an invite code to share with them.
+            Enter the invite code your teacher gave you to join their classroom
           </p>
         </div>
 
-        <!-- Create Classroom Form -->
+        <!-- Join Form -->
         <div class="form-container">
-          <form id="createClassroomForm" class="classroom-form">
-            <!-- Classroom Name -->
+          <form id="joinClassroomForm" class="classroom-form">
+            <!-- Invite Code -->
             <div class="form-group">
-              <label for="classroomName" class="form-label">
-                Classroom Name <span class="required">*</span>
+              <label for="inviteCode" class="form-label">
+                Invite Code <span class="required">*</span>
               </label>
               <input
                 type="text"
-                id="classroomName"
-                name="classroomName"
+                id="inviteCode"
+                name="inviteCode"
                 class="form-input"
-                placeholder="e.g., Year 10 History, GCSE Mathematics"
+                placeholder="Enter 8-character code (e.g., ABC12345)"
                 required
-                maxlength="200"
+                maxlength="10"
+                style="text-transform: uppercase; letter-spacing: 2px; font-family: 'Courier New', monospace; font-size: 1.1rem; text-align: center;"
+                autocomplete="off"
               />
-              <small class="form-hint">Choose a clear, descriptive name for your classroom</small>
-            </div>
-
-            <!-- Subject Selection -->
-            <div class="form-group">
-              <label for="subjectId" class="form-label">
-                Subject
-              </label>
-              <select
-                id="subjectId"
-                name="subjectId"
-                class="form-input"
-              >
-                <option value="">No specific subject (General)</option>
-                <!-- Subjects will be loaded here -->
-              </select>
-              <small class="form-hint">Optional: Select a subject for this classroom</small>
-            </div>
-
-            <!-- Year Group -->
-            <div class="form-group">
-              <label for="yearGroup" class="form-label">
-                Year Group
-              </label>
-              <select
-                id="yearGroup"
-                name="yearGroup"
-                class="form-input"
-              >
-                <option value="">All Year Groups</option>
-                <option value="Year 1-6">Year 1-6 (Primary)</option>
-                <option value="Year 7-9">Year 7-9 (KS3)</option>
-                <option value="Year 10-11">Year 10-11 (GCSE)</option>
-                <option value="Year 12-13">Year 12-13 (A-Level)</option>
-              </select>
-              <small class="form-hint">Optional: Select the year group for this classroom</small>
+              <small class="form-hint">Ask your teacher for the classroom invite code</small>
             </div>
 
             <!-- Error Message -->
@@ -162,15 +127,8 @@
                   <polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
                 <div>
-                  <strong>Classroom created successfully!</strong>
-                  <p style="margin: 5px 0 0 0;">Your invite code is: <code id="inviteCodeDisplay" style="background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 4px; font-weight: 600; color: #10B981;"></code></p>
-                  <p style="margin: 10px 0 0 0; font-size: 0.9rem;">Share this code with your students so they can join your classroom.</p>
-                  <button type="button" id="showFullscreenBtn" class="btn btn-secondary" style="margin-top: 15px; width: 100%;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px;">
-                      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-                    </svg>
-                    Show Fullscreen for Board
-                  </button>
+                  <strong>Successfully joined classroom!</strong>
+                  <p style="margin: 10px 0 0 0; font-size: 0.9rem;">You can now access assignments and resources from your teacher.</p>
                 </div>
               </div>
             </div>
@@ -178,7 +136,7 @@
             <!-- Submit Button -->
             <div class="form-actions">
               <button type="submit" class="btn btn-primary btn-large" id="submitBtn">
-                <span>Create Classroom</span>
+                <span>Join Classroom</span>
                 <svg
                   class="btn-icon"
                   viewBox="0 0 24 24"
@@ -186,15 +144,41 @@
                   stroke="currentColor"
                   stroke-width="2"
                 >
-                  <line x1="12" y1="5" x2="12" y2="19"/>
-                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                  <polyline points="10 17 15 12 10 7"/>
+                  <line x1="15" y1="12" x2="3" y2="12"/>
                 </svg>
               </button>
-              <a href="dashboard.html" class="btn btn-secondary btn-large">
+              <a href="../dashboard.html" class="btn btn-secondary btn-large">
                 Cancel
               </a>
             </div>
           </form>
+        </div>
+
+        <!-- My Classrooms Section -->
+        <div style="margin-top: 60px;">
+          <div class="section-header">
+            <h2 class="section-title">My Classrooms</h2>
+          </div>
+          <div id="myClassroomsList" class="classrooms-grid">
+            <div class="loading-state">
+              <div class="loading-spinner"></div>
+              <p>Loading your classrooms...</p>
+            </div>
+          </div>
+          <div id="noClassrooms" class="empty-state" style="display: none;">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <h3>No Classrooms Yet</h3>
+            <p>Join a classroom using an invite code from your teacher</p>
+          </div>
         </div>
       </div>
     </div>
@@ -212,14 +196,14 @@
           <div class="footer-section">
             <h4 class="footer-heading">Quick Links</h4>
             <a href="../dashboard.html" class="footer-link">Dashboard</a>
-            <a href="dashboard.html" class="footer-link">Classrooms</a>
-            <a href="create.html" class="footer-link">Create Classroom</a>
+            <a href="join.html" class="footer-link">Join Classroom</a>
+            <a href="../subjects.html" class="footer-link">Subjects</a>
           </div>
           <div class="footer-section">
             <h4 class="footer-heading">Resources</h4>
-            <a href="../subjects.html" class="footer-link">Subjects</a>
             <a href="../past-papers.html" class="footer-link">Past Papers</a>
             <a href="../quizzes.html" class="footer-link">Quizzes</a>
+            <a href="../flashcards.html" class="footer-link">Flashcards</a>
           </div>
           <div class="footer-section">
             <h4 class="footer-heading">Legal</h4>
@@ -262,27 +246,7 @@
     <!-- Load Auth Check -->
     <script src="../../assets/js/auth-check.js"></script>
 
-    <!-- Load Classroom Create JS -->
-    <script src="../../assets/js/classroom-create.js"></script>
-
-    <!-- Fullscreen Invite Code Modal -->
-    <div id="fullscreenModal" class="fullscreen-modal" style="display: none;">
-      <div class="fullscreen-content">
-        <button id="closeFullscreen" class="fullscreen-close" aria-label="Close">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-        <div class="fullscreen-invite-code">
-          <h2 style="margin-bottom: 20px; color: var(--text-primary);">Classroom Invite Code</h2>
-          <div class="invite-code-large" id="fullscreenInviteCode"></div>
-          <p style="margin-top: 30px; color: var(--text-secondary); font-size: 1.1rem;">
-            Students can join using this code at:<br>
-            <code style="background: rgba(0,0,0,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">your-site.com/classroom/join.html</code>
-          </p>
-        </div>
-      </div>
-    </div>
+    <!-- Load Classroom Join JS -->
+    <script src="../../assets/js/classroom-join.js"></script>
   </body>
 </html>
